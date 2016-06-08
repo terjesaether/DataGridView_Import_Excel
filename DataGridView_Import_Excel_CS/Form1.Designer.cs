@@ -1,4 +1,4 @@
-﻿namespace DataGridView_Import_Excel
+﻿namespace DataGrPidView_Import_Excel
 {
     partial class Form1
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGrPidView_Import_Excel.Properties.Settings settings1 = new DataGrPidView_Import_Excel.Properties.Settings();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSelect = new System.Windows.Forms.Button();
@@ -45,6 +46,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btnChooseFile = new System.Windows.Forms.Button();
             this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.lboxShowFiles = new System.Windows.Forms.ListBox();
             this.btnListFolder = new System.Windows.Forms.Button();
@@ -88,7 +90,6 @@
             this.txtActorName.Name = "txtActorName";
             this.txtActorName.Size = new System.Drawing.Size(191, 26);
             this.txtActorName.TabIndex = 7;
-            this.txtActorName.Text = "Øbl";
             this.txtActorName.TextChanged += new System.EventHandler(this.txtActorName_TextChanged);
             // 
             // btnCheckActor
@@ -207,8 +208,11 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.propertyGrid1);
-            this.tabPage3.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::DataGridView_Import_Excel.Properties.Settings.Default, "MainWindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tabPage3.Location = global::DataGridView_Import_Excel.Properties.Settings.Default.MainWindowLocation;
+            settings1.FileOpenPath = "@\"C:\\dubtool\"";
+            settings1.MainWindowLocation = new System.Drawing.Point(4, 22);
+            settings1.SettingsKey = "";
+            this.tabPage3.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "MainWindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tabPage3.Location = settings1.MainWindowLocation;
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1172, 704);
             this.tabPage3.TabIndex = 2;
@@ -224,6 +228,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.btnChooseFile);
             this.tabPage4.Controls.Add(this.comboListFiles);
             this.tabPage4.Controls.Add(this.lboxShowFiles);
             this.tabPage4.Controls.Add(this.btnListFolder);
@@ -234,6 +239,16 @@
             this.tabPage4.Text = "Sjekk mappe";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // btnChooseFile
+            // 
+            this.btnChooseFile.Location = new System.Drawing.Point(669, 3);
+            this.btnChooseFile.Name = "btnChooseFile";
+            this.btnChooseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnChooseFile.TabIndex = 3;
+            this.btnChooseFile.Text = "Velg fil";
+            this.btnChooseFile.UseVisualStyleBackColor = true;
+            this.btnChooseFile.Click += new System.EventHandler(this.btnChooseFile_Click);
+            // 
             // comboListFiles
             // 
             this.comboListFiles.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -243,7 +258,6 @@
             this.comboListFiles.Name = "comboListFiles";
             this.comboListFiles.Size = new System.Drawing.Size(329, 21);
             this.comboListFiles.TabIndex = 2;
-            
             // 
             // lboxShowFiles
             // 
@@ -259,7 +273,7 @@
             this.btnListFolder.Name = "btnListFolder";
             this.btnListFolder.Size = new System.Drawing.Size(75, 23);
             this.btnListFolder.TabIndex = 0;
-            this.btnListFolder.Text = "button1";
+            this.btnListFolder.Text = "List mappe";
             this.btnListFolder.UseVisualStyleBackColor = true;
             this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
             // 
@@ -271,7 +285,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Check check";
+            this.Text = "Check check v0.4";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -289,7 +303,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button btnSelect;
         private System.Windows.Forms.TextBox txtActorName;
-        private System.Windows.Forms.Button btnCheckActor;
         private System.Windows.Forms.Label lblActorInfo;
         private System.Windows.Forms.Label lblResult;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
@@ -305,6 +318,8 @@
         private System.Windows.Forms.ListBox lboxShowFiles;
         private System.Windows.Forms.Button btnListFolder;
         private System.Windows.Forms.ComboBox comboListFiles;
+        private System.Windows.Forms.Button btnChooseFile;
+        public System.Windows.Forms.Button btnCheckActor;
     }
 }
 

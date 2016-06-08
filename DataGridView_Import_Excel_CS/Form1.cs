@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using System.Drawing;
 
 
-namespace DataGridView_Import_Excel
+
+
+namespace DataGrPidView_Import_Excel
 {
     public partial class Form1 : Form
     {
-        //private string Excel03ConString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'";
         private string Excel03ConString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;IMEX=1;HDR=NO'";
         private string Excel07ConString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;IMEX=1;HDR=NO'";
 
@@ -22,8 +23,10 @@ namespace DataGridView_Import_Excel
         public Form1()
         {
             InitializeComponent();
+            Utils.listFiles(lboxShowFiles, comboListFiles);
             flowLayoutPanel1.BackColor = Color.LightBlue;
-            
+            lblChosenDubber.Font = new Font("Arial", 20, FontStyle.Bold);
+            lblChosenDubber.ForeColor = Color.Red;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -49,36 +52,43 @@ namespace DataGridView_Import_Excel
 
 private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 {
-    string filePath = openFileDialog1.FileName;
+    string filePath = openFileDialog1.FileName; // Her henter vi filnavnet, kan hentes fra listen
     string extension = Path.GetExtension(filePath);
-    //string header = rbHeaderYes.Checked ? "YES" : "NO";
-    string header = "NO";
-    string conStr, sheetName;
+    string conStr; 
+    //string sheetName;
+    string searchString = txtActorName.Text.ToString().ToLower();
 
-    conStr = string.Empty;
+            conStr = string.Empty;
     switch (extension)
     {
         case ".xls": //Excel 97-03
-            conStr = string.Format(Excel03ConString, filePath, header);
+            conStr = string.Format(Excel03ConString, filePath);
+                    //conStr = string.Format(Excel03ConString, filePath, header);
             break;
 
         case ".xlsx": //Excel 07
-            conStr = string.Format(Excel07ConString, filePath, header);
+            conStr = string.Format(Excel07ConString, filePath);
             break;
     }
 
+            ScanFolder.GetNameFromFirstSheet(conStr, dataGridView1);
+            
+            
+
     //Get the name of the First Sheet.
-    using (OleDbConnection con = new OleDbConnection(conStr))
-    {
-        using (OleDbCommand cmd = new OleDbCommand())
-        {
-            cmd.Connection = con;
-            con.Open();
-            DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-            sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-            con.Close();
-        }
-    }
+    //        using (OleDbConnection con = new OleDbConnection(conStr))
+    //{
+    //    using (OleDbCommand cmd = new OleDbCommand())
+    //    {
+    //        cmd.Connection = con;
+    //        con.Open();
+    //        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+    //        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+    //        con.Close();
+    //    }
+    //}
+
+
 
     //Read Data from the First Sheet.
     using (OleDbConnection con = new OleDbConnection(conStr))
@@ -88,7 +98,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
             using (OleDbDataAdapter oda = new OleDbDataAdapter())
             {
                 DataTable dt = new DataTable();
-                cmd.CommandText = "SELECT * From [" + sheetName + "]";
+                //cmd.CommandText = "SELECT * From [" + sheetName + "]";
                 cmd.Connection = con;
                 con.Open();
                 oda.SelectCommand = cmd;
@@ -97,16 +107,15 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
 
                 //Populate DataGridView.
                 dataGridView1.DataSource = dt;
+                Variables.theTable = dt;
+                txtActorName.Visible = true;
+                btnCheckActor.Enabled = true;
+                        
+                calculateRoles(dt, searchString);
 
-                        Variables.theTable = dt;
-
-                        txtActorName.Visible = true;
-                        btnCheckActor.Enabled = true;
-                        string searchString = txtActorName.Text.ToString().ToLower();
-
-                        calculateRoles(dt, searchString);
-            }
-        }
+                    }
+                    
+                }
     }
 }
         // Lister opp alt
@@ -140,7 +149,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
             string linesDone;
             string[] linesArray;
 
-            var rolesList = new List<Chararcter>(); // Dette er en liste med karakterer, karakterer har navn og de eps den mangler i
+            var rolesList = new List<RoleNameAndListOfEpisodes>(); // Dette er en liste med karakterer, karakterer har navn og de eps den mangler i
             
             lblChosenDubber.Font = new Font("Arial", 20);
             lblChosenDubber.Text = queryActor.ToString().ToUpper();
@@ -153,7 +162,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
                 if (currActor.Contains(queryActor)) // Vi finner en match
                 {
 
-                    Chararcter characters = new Chararcter(); // Oppretter et ny karakterobjekt
+                    RoleNameAndListOfEpisodes characters = new RoleNameAndListOfEpisodes(); // Oppretter et ny karakterobjekt
                     characters.roleName = dt.Rows[i][1].ToString(); // Legger til rollenavnet
                     characters.episodes = new List<string>();
                     rolesList.Add(characters);
@@ -211,19 +220,14 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
 
         public void calculateResultsByEpisode(DataTable dt, string searchString)
         {
-            // Finn første rad med rolle
-            
-            string currEpsLines = "";
-            //int totEps = Convert.ToInt32(dt.Rows[2][15].ToString()) - Convert.ToInt32(dt.Rows[2][4].ToString());
-
+                        
+            string currEpsLines = "";            
             string linesTotal;
             string linesDone;
             string[] linesArray;
 
             var episodeList = new List<Episode>(); // Dette er en liste med Episoder, Episoder med en liste over rollene i den episoden
-
-            lblChosenDubber.Font = new Font("Arial", 20, FontStyle.Bold);
-            lblChosenDubber.ForeColor = Color.Red;
+          
             lblChosenDubber.Text = searchString.ToString().ToUpper();
 
             // Går gjennom alle kolonnene: [rad][kolonne]
@@ -297,25 +301,13 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
         }
 
         private void btnListFolder_Click(object sender, EventArgs e)
-        {
-            lboxShowFiles.Items.Clear();
-            comboListFiles.Items.Clear();
-            DirectoryInfo dinfo = new DirectoryInfo(@"C:\dubtool");
-            FileInfo[] Files = dinfo.GetFiles("*.xls");
-            
-            foreach (FileInfo file in Files)
-            {
-                lboxShowFiles.Items.Add(file.Name);                
-                comboListFiles.Items.Add(file.Name);
-            }
-
-            //string folder = @"C:\dubtool";
-            //string[] files = Directory.GetFiles(folder, "*.xls");
-            
-            //lboxShowFiles.Items.AddRange(files);
-            //comboListFiles.Items.AddRange(files);
+        {         
+            Utils.listFiles(lboxShowFiles, comboListFiles);                    
         }
 
-        
+        private void btnChooseFile_Click(object sender, EventArgs e)
+        {
+            string file = comboListFiles.SelectedItem.ToString();
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DataGridView_Import_Excel
+namespace DataGrPidView_Import_Excel
 {
     static class Program
     {

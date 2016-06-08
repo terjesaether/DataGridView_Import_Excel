@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DataGridView_Import_Excel
+namespace DataGrPidView_Import_Excel
 {
     public partial class ScriptView : Form
     {

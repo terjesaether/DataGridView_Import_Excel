@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DataGridView_Import_Excel.Properties {
+namespace DataGrPidView_Import_Excel.Properties {
     using System;
     
     

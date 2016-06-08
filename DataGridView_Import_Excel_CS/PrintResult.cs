@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DataGridView_Import_Excel
+namespace DataGrPidView_Import_Excel
 {
     class PrintResult
     {
-        public static void printResultByRoles(List<Chararcter> rolesList, FlowLayoutPanel resultPanel)
+        public static void printResultByRoles(List<RoleNameAndListOfEpisodes> rolesList, FlowLayoutPanel resultPanel)
         {
             // skrive ut rolesList, som består av rollenavn med tilhørende episoder:
             foreach (var item in rolesList)
