@@ -1,4 +1,4 @@
-﻿namespace DataGrPidView_Import_Excel
+﻿namespace DataGridView_Import_Excel
 {
     partial class Form1
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGrPidView_Import_Excel.Properties.Settings settings1 = new DataGrPidView_Import_Excel.Properties.Settings();
+            DataGridView_Import_Excel.Properties.Settings settings1 = new DataGridView_Import_Excel.Properties.Settings();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSelect = new System.Windows.Forms.Button();

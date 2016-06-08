@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace DataGrPidView_Import_Excel
+namespace DataGridView_Import_Excel
 {
     // Liste over alle produksjonene, hver DataTable er en forside
     public class NordubbProductions

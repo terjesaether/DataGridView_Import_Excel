@@ -1,4 +1,4 @@
-﻿namespace DataGrPidView_Import_Excel
+﻿namespace DataGridView_Import_Excel
 {
     partial class ScriptView
     {

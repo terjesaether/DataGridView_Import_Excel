@@ -9,7 +9,7 @@ using System.Drawing;
 
 
 
-namespace DataGrPidView_Import_Excel
+namespace DataGridView_Import_Excel
 {
     public partial class Form1 : Form
     {

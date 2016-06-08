@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DataGrPidView_Import_Excel
+namespace DataGridView_Import_Excel
 {
     class ScanFolder
     {
