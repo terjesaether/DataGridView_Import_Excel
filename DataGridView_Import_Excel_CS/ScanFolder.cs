@@ -1,16 +1,18 @@
-﻿using System;
+﻿using DataGridView_Import_Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static DataGridView_Import_Excel.Form1;
 
 namespace DataGridView_Import_Excel
 {
-    class ScanFolder
+class ScanFolder
     {
-        public static void GetNameFromFirstSheet(string conStr, DataGridView dataGrid)
+        public static void GetNameFromFirstSheet(string conStr)
         {
             string sheetName;
             //Get the name of the First Sheet.
@@ -25,10 +27,10 @@ namespace DataGridView_Import_Excel
                     con.Close();
                 }
             }
-            //ReadDataFromFirstSheet(conStr, sheetName, dataGrid);                   
+            ReadDataFromFirstSheet(conStr, sheetName);                   
         }
 
-        public void ReadDataFromFirstSheet(string conStr, string sheetName, DataGridView dataGrid)
+        public static void ReadDataFromFirstSheet(string conStr, string sheetName)
         {
             //Read Data from the First Sheet.
             using (OleDbConnection con = new OleDbConnection(conStr))
@@ -46,18 +48,19 @@ namespace DataGridView_Import_Excel
                         con.Close();
 
                         //Populate DataGridView.
-                        dataGrid.DataSource = dt;
+                        //dataGrid.DataSource = dt;
 
-                        Form1.Variables.theTable = dt;
+                        Variables.theTable = dt;
 
-                        //txtActorName.Visible = true;
-                       //btnCheckActor.Enabled = true;
-                        //string searchString = txtActorName.Text.ToString().ToLower();
-
-                        //Form1.calculateRoles(dt, searchString);
+                        Form1 form = new Form1();
+                        form.enableActorSearch(dt);
+                        
                     }
                 }
             }
+            
         }
-    }
+
+    
+}
 }

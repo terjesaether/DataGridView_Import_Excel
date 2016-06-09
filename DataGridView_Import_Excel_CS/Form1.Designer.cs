@@ -258,6 +258,7 @@
             this.comboListFiles.Name = "comboListFiles";
             this.comboListFiles.Size = new System.Drawing.Size(329, 21);
             this.comboListFiles.TabIndex = 2;
+            this.comboListFiles.SelectedIndexChanged += new System.EventHandler(this.comboListFiles_SelectedIndexChanged);
             // 
             // lboxShowFiles
             // 
@@ -319,7 +320,7 @@
         private System.Windows.Forms.Button btnListFolder;
         private System.Windows.Forms.ComboBox comboListFiles;
         private System.Windows.Forms.Button btnChooseFile;
-        public System.Windows.Forms.Button btnCheckActor;
+        private System.Windows.Forms.Button btnCheckActor;
     }
 }
 

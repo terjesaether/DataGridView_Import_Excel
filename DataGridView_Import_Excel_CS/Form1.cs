@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Drawing;
 
 
-
-
 namespace DataGridView_Import_Excel
 {
     public partial class Form1 : Form
@@ -16,17 +14,19 @@ namespace DataGridView_Import_Excel
         private string Excel03ConString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;IMEX=1;HDR=NO'";
         private string Excel07ConString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;IMEX=1;HDR=NO'";
 
-        //ScriptView popUpForm = new ScriptView();
-        
-        
+        NordubbProductions allProductions = new NordubbProductions();
+        DataTable chosenExcelFileDataTable = new DataTable();
+        //Utils utils = new Utils();
 
         public Form1()
         {
-            InitializeComponent();
-            Utils.listFiles(lboxShowFiles, comboListFiles);
+            InitializeComponent();         
+            //Utils.listFiles(lboxShowFiles, comboListFiles); // slett
+            scanDubtoolFolder();
             flowLayoutPanel1.BackColor = Color.LightBlue;
             lblChosenDubber.Font = new Font("Arial", 20, FontStyle.Bold);
             lblChosenDubber.ForeColor = Color.Red;
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -34,9 +34,10 @@ namespace DataGridView_Import_Excel
             Properties.Settings.Default.Save();
         }
 
+        
+
         private void btnSelect_Click(object sender, EventArgs e)
-        {
-            
+        {          
             string filePath;
             filePath = @"C:\dubtool"; // this is the path that you are checking.
             if (Directory.Exists(filePath))
@@ -49,13 +50,119 @@ namespace DataGridView_Import_Excel
             }
             openFileDialog1.ShowDialog();
         }
+        // Scanner folder og henter inn alle manusene i minnet
+        public void scanDubtoolFolder()
+        {          
+            
+            string conStr;
+            conStr = string.Empty;
+            string sheetName;
+            string searchString = txtActorName.Text.ToString().ToLower();
 
-private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+            List<string> dtc = new List<string>();
+            dtc = getDubtoolFolderContent();
+            Utils.listFilesFromList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp lisboksene          
+
+            //switch (extension)
+            //{
+            //    case ".xls": //Excel 97-03
+            //        conStr = string.Format(Excel03ConString, filePath);
+
+            //        break;
+
+            //    case ".xlsx": //Excel 07
+            //        conStr = string.Format(Excel07ConString, filePath);
+            //        break;
+            //}
+
+            //List<DataTable> productionsList = new List<DataTable>();
+            //List<excelFrontPage> excelFrontpageList = new List<excelFrontPage>();
+
+            int counter = 0;
+            foreach (var excelFile in dtc) // Fylle opp en liste med DataTables
+            {            
+                conStr = string.Format(Excel03ConString, excelFile);
+
+                //Get the name of the First Sheet.
+                using (OleDbConnection con = new OleDbConnection(conStr))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand())
+                    {
+                        cmd.Connection = con;
+                        con.Open();
+                        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                        con.Close();
+                    }
+                }
+
+                //Read Data from the First Sheet.
+                using (OleDbConnection con = new OleDbConnection(conStr))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand())
+                    {
+                        using (OleDbDataAdapter oda = new OleDbDataAdapter())
+                        {
+                            DataTable dt = new DataTable();                           
+                            cmd.CommandText = "SELECT * From [" + sheetName + "]";
+                            cmd.Connection = con;
+                            con.Open();
+                            oda.SelectCommand = cmd;
+                            oda.Fill(dt);
+                            //productionsList.Add(dt);
+                            var excelFrontPage = new excelFrontPage();
+                            excelFrontPage.frontPageDataTable = dt;
+                            excelFrontPage.seriesName = dt.Rows[0][0].ToString();
+                            excelFrontPage.excelFileName = dtc[counter];
+                            counter++;
+                            
+                            
+                            for (int i = 4; i < 16; i++)
+                            {                                                             
+                                excelFrontPage.numEpisodesList.Add(dt.Rows[2][i].ToString());
+                            }
+                            allProductions.productions.Add(excelFrontPage);                        
+                            con.Close();
+                            
+                            //dataGridView1.DataSource = dt;
+                            
+                            
+                        }
+                    }
+                }
+            }
+            //Populate DataGridView
+            //Variables.theTable = dt;
+            txtActorName.Visible = true;
+            btnCheckActor.Enabled = true;
+            //calculateRoles(dt, searchString);
+            //calculateResultsByEpisode(dt, searchString);
+            
+        }
+        // Laster inn dir-innhold i en liste i minnet
+        public List<string> getDubtoolFolderContent()
+        {
+            List<string> dtc = new List<string>();
+            DirectoryInfo dinfo = new DirectoryInfo(@"C:\dubtool\");
+            if (dinfo.Exists)
+            {
+                FileInfo[] Files = dinfo.GetFiles("*.xls");
+                
+                foreach (FileInfo file in Files)
+                {
+                    dtc.Add(dinfo.ToString() + file.Name.ToString());
+                    //dtc[c].Replace(@"\\", @"\");
+                }
+            }
+            return dtc;
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 {
     string filePath = openFileDialog1.FileName; // Her henter vi filnavnet, kan hentes fra listen
     string extension = Path.GetExtension(filePath);
     string conStr; 
-    //string sheetName;
+    string sheetName;
     string searchString = txtActorName.Text.ToString().ToLower();
 
             conStr = string.Empty;
@@ -70,55 +177,52 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
             conStr = string.Format(Excel07ConString, filePath);
             break;
     }
-
-            ScanFolder.GetNameFromFirstSheet(conStr, dataGridView1);
-            
-            
-
-    //Get the name of the First Sheet.
-    //        using (OleDbConnection con = new OleDbConnection(conStr))
-    //{
-    //    using (OleDbCommand cmd = new OleDbCommand())
-    //    {
-    //        cmd.Connection = con;
-    //        con.Open();
-    //        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-    //        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-    //        con.Close();
-    //    }
-    //}
+            //ScanFolder sc = new ScanFolder();
+            //sc.GetNameFromFirstSheet(conStr);
 
 
-
-    //Read Data from the First Sheet.
-    using (OleDbConnection con = new OleDbConnection(conStr))
-    {
-        using (OleDbCommand cmd = new OleDbCommand())
-        {
-            using (OleDbDataAdapter oda = new OleDbDataAdapter())
+            //Get the name of the First Sheet.
+            using (OleDbConnection con = new OleDbConnection(conStr))
             {
-                DataTable dt = new DataTable();
-                //cmd.CommandText = "SELECT * From [" + sheetName + "]";
-                cmd.Connection = con;
-                con.Open();
-                oda.SelectCommand = cmd;
-                oda.Fill(dt);
-                con.Close();
-
-                //Populate DataGridView.
-                dataGridView1.DataSource = dt;
-                Variables.theTable = dt;
-                txtActorName.Visible = true;
-                btnCheckActor.Enabled = true;
-                        
-                calculateRoles(dt, searchString);
-
-                    }
-                    
+                using (OleDbCommand cmd = new OleDbCommand())
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                    sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                    con.Close();
                 }
-    }
-}
-        // Lister opp alt
+            }
+
+
+            //Read Data from the First Sheet.
+            using (OleDbConnection con = new OleDbConnection(conStr))
+            {
+                using (OleDbCommand cmd = new OleDbCommand())
+                {
+                    using (OleDbDataAdapter oda = new OleDbDataAdapter())
+                    {
+                        DataTable dt = new DataTable();
+                        cmd.CommandText = "SELECT * From [" + sheetName + "]";
+                        cmd.Connection = con;
+                        con.Open();
+                        oda.SelectCommand = cmd;
+                        oda.Fill(dt);
+                        con.Close();
+
+                        //Populate DataGridView.
+                        dataGridView1.DataSource = dt;
+                        Variables.theTable = dt;
+                        txtActorName.Visible = true;
+                        btnCheckActor.Enabled = true;
+
+                        //calculateRoles(dt, searchString);
+                        calculateResultsByEpisode(dt, searchString);
+                    }
+                }
+            }
+        }
+        // Lister opp alt -- fjernes?
         public void calculateRoles(DataTable dt, string searchString)
         {
             int counter = 0;
@@ -134,8 +238,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
                 {
                     counter++;
                 }              
-            }
-            
+            }          
             calculateResultsByEpisode(dt, searchString);
         }
         
@@ -197,14 +300,15 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
         {
             string searchString = txtActorName.Text.ToString().ToLower();
             flowLayoutPanel1.Controls.Clear();           
-            calculateResultsByEpisode(Variables.theTable, searchString);
+            calculateResultsByEpisode(chosenExcelFileDataTable, searchString);
         }
         // Globale variabler
         public class Variables
         {
             public static DataTable theTable { get; set; }
         }
-     
+
+        
         private void btnViewScript_Click(object sender, EventArgs e)
         {
             
@@ -240,6 +344,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
                 string currentRoleName;
                 string currentRoleLineNumbers;
                 
+                
                 // Nedover
                 for (int row = 5; row < dt.Rows.Count; row++)
                 {
@@ -270,7 +375,7 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
                                     };
                                      
                                     episode.roleNames.Add(r);
-                                    //episode.roleNames.Add(currentRoleLineNumbers);                                   
+                                                                       
                                 }
                             }
                         }                      
@@ -281,9 +386,9 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
             PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
 
         }
-            
-        
-        
+
+
+
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
@@ -299,15 +404,47 @@ private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelE
         {
 
         }
-
+        // OBS! Scanner folder, ikke in memory List
         private void btnListFolder_Click(object sender, EventArgs e)
         {         
             Utils.listFiles(lboxShowFiles, comboListFiles);                    
         }
 
+        // Velger fila som er valgt i dropdown-boks
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
-            string file = comboListFiles.SelectedItem.ToString();
+            string selectedFile = comboListFiles.SelectedItem.ToString();
+            
+            foreach (var episode in allProductions.productions)
+            {
+                
+                if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
+                {
+                    dataGridView1.DataSource = episode.frontPageDataTable;
+                    chosenExcelFileDataTable = episode.frontPageDataTable;                 
+                    calculateResultsByEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                }
+            }
+            // TODO: Åpne denne fila
         }
+
+        private void comboListFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        // Åpner for å søke (skrur på knapp osv)
+        public void enableActorSearch(DataTable dt)
+        {
+            dataGridView1.DataSource = dt;
+            txtActorName.Visible = true;
+            btnCheckActor.Enabled = true;
+            string searchString = txtActorName.Text.ToString().ToLower();
+            //calculateRoles(dt, searchString);
+            calculateResultsByEpisode(dt, searchString);
+            
+        }
+
+        
     }
 }
