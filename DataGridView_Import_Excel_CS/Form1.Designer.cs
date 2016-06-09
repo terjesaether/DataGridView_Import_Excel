@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridView_Import_Excel.Properties.Settings settings1 = new DataGridView_Import_Excel.Properties.Settings();
+            this.components = new System.ComponentModel.Container();
+            DataGridView_Import_Excel.Properties.Settings settings2 = new DataGridView_Import_Excel.Properties.Settings();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSelect = new System.Windows.Forms.Button();
@@ -50,6 +51,8 @@
             this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.lboxShowFiles = new System.Windows.Forms.ListBox();
             this.btnListFolder = new System.Windows.Forms.Button();
+            this.lblFileChosen = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -208,11 +211,11 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.propertyGrid1);
-            settings1.FileOpenPath = "@\"C:\\dubtool\"";
-            settings1.MainWindowLocation = new System.Drawing.Point(4, 22);
-            settings1.SettingsKey = "";
-            this.tabPage3.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "MainWindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tabPage3.Location = settings1.MainWindowLocation;
+            settings2.FileOpenPath = "@\"C:\\dubtool\"";
+            settings2.MainWindowLocation = new System.Drawing.Point(4, 22);
+            settings2.SettingsKey = "";
+            this.tabPage3.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings2, "MainWindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tabPage3.Location = settings2.MainWindowLocation;
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1172, 704);
             this.tabPage3.TabIndex = 2;
@@ -228,6 +231,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.lblFileChosen);
             this.tabPage4.Controls.Add(this.btnChooseFile);
             this.tabPage4.Controls.Add(this.comboListFiles);
             this.tabPage4.Controls.Add(this.lboxShowFiles);
@@ -278,6 +282,14 @@
             this.btnListFolder.UseVisualStyleBackColor = true;
             this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
             // 
+            // lblFileChosen
+            // 
+            this.lblFileChosen.AutoSize = true;
+            this.lblFileChosen.Location = new System.Drawing.Point(669, 33);
+            this.lblFileChosen.Name = "lblFileChosen";
+            this.lblFileChosen.Size = new System.Drawing.Size(0, 13);
+            this.lblFileChosen.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -294,6 +306,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -321,6 +334,8 @@
         private System.Windows.Forms.ComboBox comboListFiles;
         private System.Windows.Forms.Button btnChooseFile;
         private System.Windows.Forms.Button btnCheckActor;
+        private System.Windows.Forms.Label lblFileChosen;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

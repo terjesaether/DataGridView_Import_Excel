@@ -36,7 +36,7 @@ namespace DataGridView_Import_Excel
             }
         }
 
-         public static void printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel)
+         public static void printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel, string seriesName)
         {
             foreach (var item in episodeList)
             {
@@ -44,7 +44,8 @@ namespace DataGridView_Import_Excel
                 {
                     Label lbl = new Label();
                     lbl.Font = new System.Drawing.Font("Arial", 14);
-                    string result = "Episode " + item.episodeNumber.ToString() + ": ";                    
+                    string result = seriesName + "\r\n" + "Episode " + item.episodeNumber.ToString() + ": "; ;
+                                         
                     result += Environment.NewLine;
                     //lbl.ForeColor = Color.Red;
                     lbl.AutoSize = true;
@@ -65,6 +66,14 @@ namespace DataGridView_Import_Excel
                     lbl.Text = result2;
                     resultPanel.Controls.Add(lbl);
                 }
+            }
+        }
+
+        public static void CalculateAllEpisodes(NordubbProductions productions, FlowLayoutPanel panel)
+        {
+            foreach (var item in productions.productions)
+            {
+                //printResultByEpisode(item.frontPageDataTable, panel);
             }
         }
        

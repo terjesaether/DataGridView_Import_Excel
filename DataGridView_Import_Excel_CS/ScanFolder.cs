@@ -12,7 +12,7 @@ namespace DataGridView_Import_Excel
 {
 class ScanFolder
     {
-        public static void GetNameFromFirstSheet(string conStr)
+        public static void StartFileScanning(string conStr)
         {
             string sheetName;
             //Get the name of the First Sheet.

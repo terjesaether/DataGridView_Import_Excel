@@ -35,11 +35,10 @@ namespace DataGridView_Import_Excel
         }
 
         
-
         private void btnSelect_Click(object sender, EventArgs e)
         {          
             string filePath;
-            filePath = @"C:\dubtool"; // this is the path that you are checking.
+            filePath = @"C:\dubtool\"; // this is the path that you are checking.
             if (Directory.Exists(filePath))
             {
                 openFileDialog1.InitialDirectory = filePath;
@@ -52,8 +51,7 @@ namespace DataGridView_Import_Excel
         }
         // Scanner folder og henter inn alle manusene i minnet
         public void scanDubtoolFolder()
-        {          
-            
+        {                      
             string conStr;
             conStr = string.Empty;
             string sheetName;
@@ -61,7 +59,7 @@ namespace DataGridView_Import_Excel
 
             List<string> dtc = new List<string>();
             dtc = getDubtoolFolderContent();
-            Utils.listFilesFromList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp lisboksene          
+            Utils.listFilesFromList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp listboksene          
 
             //switch (extension)
             //{
@@ -143,7 +141,9 @@ namespace DataGridView_Import_Excel
         public List<string> getDubtoolFolderContent()
         {
             List<string> dtc = new List<string>();
-            DirectoryInfo dinfo = new DirectoryInfo(@"C:\dubtool\");
+            //DirectoryInfo dinfo = new DirectoryInfo(@"C:\dubtool\");
+            DirectoryInfo dinfo = new DirectoryInfo(Utils.dubToolDir);
+            
             if (dinfo.Exists)
             {
                 FileInfo[] Files = dinfo.GetFiles("*.xls");
@@ -299,8 +299,8 @@ namespace DataGridView_Import_Excel
         private void btnCheckActor_Click(object sender, EventArgs e)
         {
             string searchString = txtActorName.Text.ToString().ToLower();
-            flowLayoutPanel1.Controls.Clear();           
-            calculateResultsByEpisode(chosenExcelFileDataTable, searchString);
+            flowLayoutPanel1.Controls.Clear();
+            calculateByOneEpisode(chosenExcelFileDataTable, searchString);
         }
         // Globale variabler
         public class Variables
@@ -322,9 +322,35 @@ namespace DataGridView_Import_Excel
             }           
         }
 
-        public void calculateResultsByEpisode(DataTable dt, string searchString)
+        public void calculateByOneEpisode(DataTable dt, string searchString)
         {
-                        
+            List<Episode> episodeList = calculateResultsByEpisode(dt, searchString);
+            PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, "");
+        }
+
+        public void calculateAllEpisodes(NordubbProductions productions, string searchString)
+        {
+            foreach (var item in productions.productions)
+            {
+                string seriesName = "";                
+                
+                List<Episode> episodeList = calculateResultsByEpisode(item.frontPageDataTable, searchString);
+                if (episodeList.Count > 0)
+                {
+                    seriesName = item.seriesName.ToString();
+                    PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, seriesName);
+                }
+                
+                // Må gi Utskriften en mulighet til å skrive ut navn på eps
+                
+            }
+            //calculateAllEpisodes
+            // Kjøre print for hver episode?
+        }
+
+
+        public List<Episode> calculateResultsByEpisode(DataTable dt, string searchString)
+        {                       
             string currEpsLines = "";            
             string linesTotal;
             string linesDone;
@@ -343,8 +369,7 @@ namespace DataGridView_Import_Excel
                 episodeList.Add(episode);
                 string currentRoleName;
                 string currentRoleLineNumbers;
-                
-                
+                              
                 // Nedover
                 for (int row = 5; row < dt.Rows.Count; row++)
                 {
@@ -383,8 +408,8 @@ namespace DataGridView_Import_Excel
                 }
             }
 
-            PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
-
+            //PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
+            return episodeList;
         }
 
 
@@ -413,20 +438,32 @@ namespace DataGridView_Import_Excel
         // Velger fila som er valgt i dropdown-boks
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
-            string selectedFile = comboListFiles.SelectedItem.ToString();
-            
-            foreach (var episode in allProductions.productions)
+            if (comboListFiles.SelectedItem != null)
             {
-                
-                if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
+                string selectedFile = comboListFiles.SelectedItem.ToString();
+                lblFileChosen.Text = "Du har valgt: " + selectedFile;
+
+                foreach (var episode in allProductions.productions)
                 {
-                    dataGridView1.DataSource = episode.frontPageDataTable;
-                    chosenExcelFileDataTable = episode.frontPageDataTable;                 
-                    calculateResultsByEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                    if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
+                    {
+                        dataGridView1.DataSource = episode.frontPageDataTable;
+                        chosenExcelFileDataTable = episode.frontPageDataTable;
+                        //calculateAllEpisodes(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                        calculateByOneEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                    }
                 }
             }
+            else
+            {
+                lblFileChosen.Text = "Du må velge en fil...";
+            }
+
+            
             // TODO: Åpne denne fila
         }
+
+        
 
         private void comboListFiles_SelectedIndexChanged(object sender, EventArgs e)
         {

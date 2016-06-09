@@ -11,7 +11,7 @@ namespace DataGridView_Import_Excel
     class Utils
     {
 
-    static string dubToolDir = @"C:\dubtool";
+    public static string dubToolDir = @"C:\dubtool\";
 
         public static void listFiles(ListBox listbox, ComboBox combobox)
         {
@@ -40,7 +40,7 @@ namespace DataGridView_Import_Excel
                 foreach (var file in folderContent)
                 {
                     listbox.Items.Add(file);
-                    onlyFileName = file.Substring(dubToolDir.Length + 1, file.Length - dubToolDir.Length - 1);
+                    onlyFileName = file.Substring(dubToolDir.Length, file.Length - dubToolDir.Length - 4);
                     combobox.Items.Add(onlyFileName);
                 }
             

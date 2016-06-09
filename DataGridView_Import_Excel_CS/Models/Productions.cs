@@ -32,8 +32,8 @@ namespace DataGridView_Import_Excel
         }
 
         public string trimFilename (string filename)
-        {
-            string t = filename.Substring(11);
+        {           
+            string t = filename.Substring(Utils.dubToolDir.Length);
             t = t.Substring(0, t.Length - 4);
             return t;
         }
@@ -47,7 +47,7 @@ namespace DataGridView_Import_Excel
         public string roleName { get; set; }
     }
 
-    internal class Episode
+    public class Episode
     {
         public string episodeNumber { get; set; }
         //public List<Dictionary<string, string>> roleNamesDic { get; set; }
