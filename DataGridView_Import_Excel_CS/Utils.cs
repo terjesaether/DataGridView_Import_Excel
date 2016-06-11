@@ -31,7 +31,7 @@ namespace DataGridView_Import_Excel
         
         }
         // Fyller ut listboks og combobox
-        public static void listFilesFromList(List<string> folderContent, ListBox listbox, ComboBox combobox)
+        public static void listFilesFromMemoryList(List<string> folderContent, ListBox listbox, ComboBox combobox)
         {
             listbox.Items.Clear();
             combobox.Items.Clear();
@@ -42,11 +42,10 @@ namespace DataGridView_Import_Excel
                     listbox.Items.Add(file);
                     onlyFileName = file.Substring(dubToolDir.Length, file.Length - dubToolDir.Length - 4);
                     combobox.Items.Add(onlyFileName);
-                }
-            
-
+                }         
         }
 
+        
 
     }
 

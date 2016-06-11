@@ -59,7 +59,7 @@ namespace DataGridView_Import_Excel
 
             List<string> dtc = new List<string>();
             dtc = getDubtoolFolderContent();
-            Utils.listFilesFromList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp listboksene          
+            Utils.listFilesFromMemoryList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp listboksene          
 
             //switch (extension)
             //{
@@ -217,7 +217,7 @@ namespace DataGridView_Import_Excel
                         btnCheckActor.Enabled = true;
 
                         //calculateRoles(dt, searchString);
-                        calculateResultsByEpisode(dt, searchString);
+                        calculateSearchResultsByEpisode(dt, searchString);
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace DataGridView_Import_Excel
                     counter++;
                 }              
             }          
-            calculateResultsByEpisode(dt, searchString);
+            calculateSearchResultsByEpisode(dt, searchString);
         }
         
         private void calculateResultByRole(DataTable dt, string queryActor)
@@ -324,7 +324,7 @@ namespace DataGridView_Import_Excel
 
         public void calculateByOneEpisode(DataTable dt, string searchString)
         {
-            List<Episode> episodeList = calculateResultsByEpisode(dt, searchString);
+            List<Episode> episodeList = calculateSearchResultsByEpisode(dt, searchString);
             PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, "");
         }
 
@@ -334,7 +334,7 @@ namespace DataGridView_Import_Excel
             {
                 string seriesName = "";                
                 
-                List<Episode> episodeList = calculateResultsByEpisode(item.frontPageDataTable, searchString);
+                List<Episode> episodeList = calculateSearchResultsByEpisode(item.frontPageDataTable, searchString);
                 if (episodeList.Count > 0)
                 {
                     seriesName = item.seriesName.ToString();
@@ -348,8 +348,8 @@ namespace DataGridView_Import_Excel
             // Kjøre print for hver episode?
         }
 
-
-        public List<Episode> calculateResultsByEpisode(DataTable dt, string searchString)
+        // Episode består av Episodenummer og Role med antall linjer
+        public List<Episode> calculateSearchResultsByEpisode(DataTable dt, string searchString)
         {                       
             string currEpsLines = "";            
             string linesTotal;
@@ -413,8 +413,6 @@ namespace DataGridView_Import_Excel
         }
 
 
-
-
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -429,38 +427,46 @@ namespace DataGridView_Import_Excel
         {
 
         }
-        // OBS! Scanner folder, ikke in memory List
+        
         private void btnListFolder_Click(object sender, EventArgs e)
-        {         
-            Utils.listFiles(lboxShowFiles, comboListFiles);                    
+        {
+            //Utils.listFiles(lboxShowFiles, comboListFiles);
+            List<string> dtc = new List<string>();
+            dtc = getDubtoolFolderContent();
+            Utils.listFilesFromMemoryList(dtc, lboxShowFiles, comboListFiles);
         }
 
-        // Velger fila som er valgt i dropdown-boks
+        // == Velger fila som er valgt i dropdown-boks ==
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
-            if (comboListFiles.SelectedItem != null)
+            //if (comboListFiles.SelectedItem != null)
+            if (lboxShowFiles.SelectedItem != null)
             {
-                string selectedFile = comboListFiles.SelectedItem.ToString();
+                //string selectedFile = comboListFiles.SelectedItem.ToString();
+                string selectedFile = lboxShowFiles.SelectedItem.ToString();
                 lblFileChosen.Text = "Du har valgt: " + selectedFile;
+                lblChosenEpisodeFrontpage.Text = "Du har valgt: " + selectedFile;
 
-                foreach (var episode in allProductions.productions)
-                {
-                    if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
-                    {
-                        dataGridView1.DataSource = episode.frontPageDataTable;
-                        chosenExcelFileDataTable = episode.frontPageDataTable;
-                        //calculateAllEpisodes(chosenExcelFileDataTable, txtActorName.Text.ToString());
-                        calculateByOneEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
-                    }
-                }
+                findFileFromSelection(selectedFile);
             }
             else
             {
                 lblFileChosen.Text = "Du må velge en fil...";
-            }
+            }         
+        }
 
-            
-            // TODO: Åpne denne fila
+        private void findFileFromSelection(string selectedFile)
+        {
+            foreach (var episode in allProductions.productions)
+            {
+                if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
+                {
+                    dataGridView1.DataSource = episode.frontPageDataTable;
+                    chosenExcelFileDataTable = episode.frontPageDataTable;
+                    //calculateAllEpisodes(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                    calculateByOneEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                }
+            }
         }
 
         
@@ -478,7 +484,7 @@ namespace DataGridView_Import_Excel
             btnCheckActor.Enabled = true;
             string searchString = txtActorName.Text.ToString().ToLower();
             //calculateRoles(dt, searchString);
-            calculateResultsByEpisode(dt, searchString);
+            calculateSearchResultsByEpisode(dt, searchString);
             
         }
 

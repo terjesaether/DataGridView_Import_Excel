@@ -51,9 +51,6 @@ class ScanFolder
                         //dataGrid.DataSource = dt;
 
                         Variables.theTable = dt;
-
-                        Form1 form = new Form1();
-                        form.enableActorSearch(dt);
                         
                     }
                 }

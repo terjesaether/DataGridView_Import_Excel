@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DataGridView_Import_Excel.Properties.Settings settings2 = new DataGridView_Import_Excel.Properties.Settings();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSelect = new System.Windows.Forms.Button();
@@ -44,20 +43,18 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btnScanFolder = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.lblFileChosen = new System.Windows.Forms.Label();
             this.btnChooseFile = new System.Windows.Forms.Button();
             this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.lboxShowFiles = new System.Windows.Forms.ListBox();
             this.btnListFolder = new System.Windows.Forms.Button();
-            this.lblFileChosen = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lblChosenEpisodeFrontpage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -160,9 +157,8 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(10, 10);
+            this.tabControl1.Location = new System.Drawing.Point(24, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1180, 730);
@@ -170,6 +166,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblChosenEpisodeFrontpage);
             this.tabPage1.Controls.Add(this.btnScanFolder);
             this.tabPage1.Controls.Add(this.flowLayoutPanel1);
             this.tabPage1.Controls.Add(this.lblChosenDubber);
@@ -208,27 +205,6 @@
             this.tabPage2.Text = "Manusforside";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.propertyGrid1);
-            settings2.FileOpenPath = "@\"C:\\dubtool\"";
-            settings2.MainWindowLocation = new System.Drawing.Point(4, 22);
-            settings2.SettingsKey = "";
-            this.tabPage3.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings2, "MainWindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tabPage3.Location = settings2.MainWindowLocation;
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1172, 704);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Settings";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(253, 130);
-            this.propertyGrid1.TabIndex = 0;
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.lblFileChosen);
@@ -242,6 +218,14 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Sjekk mappe";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // lblFileChosen
+            // 
+            this.lblFileChosen.AutoSize = true;
+            this.lblFileChosen.Location = new System.Drawing.Point(669, 33);
+            this.lblFileChosen.Name = "lblFileChosen";
+            this.lblFileChosen.Size = new System.Drawing.Size(0, 13);
+            this.lblFileChosen.TabIndex = 4;
             // 
             // btnChooseFile
             // 
@@ -282,13 +266,14 @@
             this.btnListFolder.UseVisualStyleBackColor = true;
             this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
             // 
-            // lblFileChosen
+            // lblChosenEpisodeFrontpage
             // 
-            this.lblFileChosen.AutoSize = true;
-            this.lblFileChosen.Location = new System.Drawing.Point(669, 33);
-            this.lblFileChosen.Name = "lblFileChosen";
-            this.lblFileChosen.Size = new System.Drawing.Size(0, 13);
-            this.lblFileChosen.TabIndex = 4;
+            this.lblChosenEpisodeFrontpage.AutoSize = true;
+            this.lblChosenEpisodeFrontpage.Location = new System.Drawing.Point(221, 12);
+            this.lblChosenEpisodeFrontpage.Name = "lblChosenEpisodeFrontpage";
+            this.lblChosenEpisodeFrontpage.Size = new System.Drawing.Size(103, 13);
+            this.lblChosenEpisodeFrontpage.TabIndex = 23;
+            this.lblChosenEpisodeFrontpage.Text = "Ingen valgt episode.";
             // 
             // Form1
             // 
@@ -304,7 +289,6 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
@@ -325,8 +309,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Button btnScanFolder;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.ListBox lboxShowFiles;
@@ -336,6 +318,7 @@
         private System.Windows.Forms.Button btnCheckActor;
         private System.Windows.Forms.Label lblFileChosen;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label lblChosenEpisodeFrontpage;
     }
 }
 
