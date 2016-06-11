@@ -50,6 +50,7 @@ namespace DataGridView_Import_Excel
     public class Episode
     {
         public string episodeNumber { get; set; }
+        public string seriesName { get; set; }
         //public List<Dictionary<string, string>> roleNamesDic { get; set; }
         public List<RoleNameAndNumOfLines> roleNames { get; set; }
     }

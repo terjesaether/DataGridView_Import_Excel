@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace DataGridView_Import_Excel
 {
@@ -31,45 +32,67 @@ namespace DataGridView_Import_Excel
 
                     resultPanel.Controls.Add(lbl);
                     //panel1.Controls.Add(lbl);
-                    // karakter -> eps nr, eps nr, eps nr....
+                    
                 }
             }
         }
 
-         public static void printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel, string seriesName)
+         public static int printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel)
         {
+            int totNumLines = 0;
             foreach (var item in episodeList)
             {
                 if (item.roleNames.Count > 0)
                 {
+                    int totNumLinesPrEpisode = 0;
                     Label lbl = new Label();
-                    lbl.Font = new System.Drawing.Font("Arial", 14);
-                    string result = seriesName + "\r\n" + "Episode " + item.episodeNumber.ToString() + ": "; ;
-                                         
-                    result += Environment.NewLine;
-                    //lbl.ForeColor = Color.Red;
+                    lbl.Font = new Font("Arial", 14);
                     lbl.AutoSize = true;
 
-                    for (int role = 0; role < item.roleNames.Count; role += 1)
-                    {
-                        //result += item.roleNames[role].ToString() + ": " + item.roleNames[role + 1].ToString() + ", ";
-                        result += item.roleNames[role].roleName.ToString() + ": " + item.roleNames[role].numOfLines.ToString() + ", ";
+                    Label lblHeading = new Label();
+                    lblHeading.BackColor = Color.Red;
+                    lblHeading.ForeColor = Color.Wheat;
+                    lblHeading.AutoSize = true;
+                    
+                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + ": ";
+                    
+                    resultPanel.Controls.Add(lblHeading);
 
+                    string resultTemp = "";
+                    //string result = seriesName + "\r\n" + "Episode " + item.episodeNumber.ToString() + ": "; 
+                                         
+                    resultTemp += Environment.NewLine;
+                    
+
+                    for (int role = 0; role < item.roleNames.Count; role += 1)
+                    {                        
+                        resultTemp += item.roleNames[role].roleName.ToString() + ": " + item.roleNames[role].numOfLines.ToString() + ", ";
+
+                        totNumLinesPrEpisode += Convert.ToInt32(item.roleNames[role].numOfLines);
+                        totNumLines += totNumLinesPrEpisode;
+                    }
+                    // Tar bort komma:
+                    string result = resultTemp.Substring(0, resultTemp.Length - 2);
+                    result += " || Totalt " + totNumLinesPrEpisode.ToString() + " replikker.";
+
+                    if (totNumLinesPrEpisode < 3)
+                    {
+                        result += " ..kanskje vi har en pickup her?";
                     }
 
-                    
-                    string result2 = result.Substring(0, result.Length - 2);
-
                     //result += Environment.NewLine;
-                    result2 += "\r\n\r\n";
+                    result += "\r\n\r\n";
                    
-                    lbl.Text = result2;
+                    lbl.Text = result;
                     resultPanel.Controls.Add(lbl);
                 }
             }
+            return totNumLines;
         }
 
-        public static void CalculateAllEpisodes(NordubbProductions productions, FlowLayoutPanel panel)
+        
+
+        public static void CalculateAllEpisodes(NordubbProductions productions, FlowLayoutPanel resultPanel)
         {
             foreach (var item in productions.productions)
             {
