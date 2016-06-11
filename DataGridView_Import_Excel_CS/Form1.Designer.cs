@@ -38,24 +38,26 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblChosenDubber = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageMain = new System.Windows.Forms.TabPage();
+            this.chckPlakat = new System.Windows.Forms.CheckBox();
+            this.chckIntro = new System.Windows.Forms.CheckBox();
             this.lblScanMessage = new System.Windows.Forms.Label();
-            this.btnRescanFolder = new System.Windows.Forms.Button();
             this.lblTotalNumLines = new System.Windows.Forms.Label();
             this.btnCheckAllEps = new System.Windows.Forms.Button();
             this.lblChosenEpisodeFrontpage = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPageScript = new System.Windows.Forms.TabPage();
+            this.tabPageSelect = new System.Windows.Forms.TabPage();
             this.lblFileChosen = new System.Windows.Forms.Label();
             this.btnChooseFile = new System.Windows.Forms.Button();
             this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.lboxShowFiles = new System.Windows.Forms.ListBox();
             this.btnListFolder = new System.Windows.Forms.Button();
+            this.btnRescanFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
+            this.tabPageMain.SuspendLayout();
+            this.tabPageScript.SuspendLayout();
+            this.tabPageSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -143,9 +145,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPageMain);
+            this.tabControl1.Controls.Add(this.tabPageScript);
+            this.tabControl1.Controls.Add(this.tabPageSelect);
             this.tabControl1.ItemSize = new System.Drawing.Size(50, 28);
             this.tabControl1.Location = new System.Drawing.Point(10, 10);
             this.tabControl1.Name = "tabControl1";
@@ -154,27 +156,52 @@
             this.tabControl1.Size = new System.Drawing.Size(1180, 800);
             this.tabControl1.TabIndex = 22;
             // 
-            // tabPage1
+            // tabPageMain
             // 
-            this.tabPage1.Controls.Add(this.lblScanMessage);
-            this.tabPage1.Controls.Add(this.btnRescanFolder);
-            this.tabPage1.Controls.Add(this.lblTotalNumLines);
-            this.tabPage1.Controls.Add(this.btnCheckAllEps);
-            this.tabPage1.Controls.Add(this.lblChosenEpisodeFrontpage);
-            this.tabPage1.Controls.Add(this.flowLayoutPanel1);
-            this.tabPage1.Controls.Add(this.lblChosenDubber);
-            this.tabPage1.Controls.Add(this.linkLabel1);
-            this.tabPage1.Controls.Add(this.btnSelect);
-            this.tabPage1.Controls.Add(this.txtActorName);
-            this.tabPage1.Controls.Add(this.lblActorInfo);
-            this.tabPage1.Controls.Add(this.btnCheckActor);
-            this.tabPage1.Location = new System.Drawing.Point(4, 32);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1172, 764);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Hoved";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageMain.Controls.Add(this.chckPlakat);
+            this.tabPageMain.Controls.Add(this.chckIntro);
+            this.tabPageMain.Controls.Add(this.lblScanMessage);
+            this.tabPageMain.Controls.Add(this.lblTotalNumLines);
+            this.tabPageMain.Controls.Add(this.btnCheckAllEps);
+            this.tabPageMain.Controls.Add(this.lblChosenEpisodeFrontpage);
+            this.tabPageMain.Controls.Add(this.flowLayoutPanel1);
+            this.tabPageMain.Controls.Add(this.lblChosenDubber);
+            this.tabPageMain.Controls.Add(this.linkLabel1);
+            this.tabPageMain.Controls.Add(this.btnSelect);
+            this.tabPageMain.Controls.Add(this.txtActorName);
+            this.tabPageMain.Controls.Add(this.lblActorInfo);
+            this.tabPageMain.Controls.Add(this.btnCheckActor);
+            this.tabPageMain.Location = new System.Drawing.Point(4, 32);
+            this.tabPageMain.Name = "tabPageMain";
+            this.tabPageMain.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMain.Size = new System.Drawing.Size(1172, 764);
+            this.tabPageMain.TabIndex = 0;
+            this.tabPageMain.Text = "Hoved";
+            this.tabPageMain.UseVisualStyleBackColor = true;
+            // 
+            // chckPlakat
+            // 
+            this.chckPlakat.AutoSize = true;
+            this.chckPlakat.Checked = true;
+            this.chckPlakat.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chckPlakat.Location = new System.Drawing.Point(717, 30);
+            this.chckPlakat.Name = "chckPlakat";
+            this.chckPlakat.Size = new System.Drawing.Size(107, 17);
+            this.chckPlakat.TabIndex = 29;
+            this.chckPlakat.Text = "Ikke vis PLAKAT";
+            this.chckPlakat.UseVisualStyleBackColor = true;
+            // 
+            // chckIntro
+            // 
+            this.chckIntro.AutoSize = true;
+            this.chckIntro.Checked = true;
+            this.chckIntro.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chckIntro.Location = new System.Drawing.Point(717, 6);
+            this.chckIntro.Name = "chckIntro";
+            this.chckIntro.Size = new System.Drawing.Size(121, 17);
+            this.chckIntro.TabIndex = 28;
+            this.chckIntro.Text = "Ikke vis intro / outro";
+            this.chckIntro.UseVisualStyleBackColor = true;
             // 
             // lblScanMessage
             // 
@@ -183,16 +210,6 @@
             this.lblScanMessage.Name = "lblScanMessage";
             this.lblScanMessage.Size = new System.Drawing.Size(0, 13);
             this.lblScanMessage.TabIndex = 27;
-            // 
-            // btnRescanFolder
-            // 
-            this.btnRescanFolder.Location = new System.Drawing.Point(958, 50);
-            this.btnRescanFolder.Name = "btnRescanFolder";
-            this.btnRescanFolder.Size = new System.Drawing.Size(200, 26);
-            this.btnRescanFolder.TabIndex = 26;
-            this.btnRescanFolder.Text = "Scan produksjonen på nytt";
-            this.btnRescanFolder.UseVisualStyleBackColor = true;
-            this.btnRescanFolder.Click += new System.EventHandler(this.btnRescanFolder_Click);
             // 
             // lblTotalNumLines
             // 
@@ -221,31 +238,32 @@
             this.lblChosenEpisodeFrontpage.TabIndex = 23;
             this.lblChosenEpisodeFrontpage.Text = "Ingen valgt episode.";
             // 
-            // tabPage2
+            // tabPageScript
             // 
-            this.tabPage2.Controls.Add(this.dataGridView1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 32);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1172, 764);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Manusforside";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageScript.Controls.Add(this.dataGridView1);
+            this.tabPageScript.Location = new System.Drawing.Point(4, 32);
+            this.tabPageScript.Name = "tabPageScript";
+            this.tabPageScript.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageScript.Size = new System.Drawing.Size(1172, 764);
+            this.tabPageScript.TabIndex = 1;
+            this.tabPageScript.Text = "Manusforside";
+            this.tabPageScript.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // tabPageSelect
             // 
-            this.tabPage4.Controls.Add(this.lblFileChosen);
-            this.tabPage4.Controls.Add(this.btnChooseFile);
-            this.tabPage4.Controls.Add(this.comboListFiles);
-            this.tabPage4.Controls.Add(this.lboxShowFiles);
-            this.tabPage4.Controls.Add(this.btnListFolder);
-            this.tabPage4.Location = new System.Drawing.Point(4, 32);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1172, 764);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Velg episoder";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPageSelect.Controls.Add(this.btnRescanFolder);
+            this.tabPageSelect.Controls.Add(this.lblFileChosen);
+            this.tabPageSelect.Controls.Add(this.btnChooseFile);
+            this.tabPageSelect.Controls.Add(this.comboListFiles);
+            this.tabPageSelect.Controls.Add(this.lboxShowFiles);
+            this.tabPageSelect.Controls.Add(this.btnListFolder);
+            this.tabPageSelect.Location = new System.Drawing.Point(4, 32);
+            this.tabPageSelect.Name = "tabPageSelect";
+            this.tabPageSelect.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSelect.Size = new System.Drawing.Size(1172, 764);
+            this.tabPageSelect.TabIndex = 3;
+            this.tabPageSelect.Text = "Velg episoder";
+            this.tabPageSelect.UseVisualStyleBackColor = true;
             // 
             // lblFileChosen
             // 
@@ -257,9 +275,9 @@
             // 
             // btnChooseFile
             // 
-            this.btnChooseFile.Location = new System.Drawing.Point(669, 3);
+            this.btnChooseFile.Location = new System.Drawing.Point(5, 36);
             this.btnChooseFile.Name = "btnChooseFile";
-            this.btnChooseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnChooseFile.Size = new System.Drawing.Size(100, 25);
             this.btnChooseFile.TabIndex = 3;
             this.btnChooseFile.Text = "Velg eps";
             this.btnChooseFile.UseVisualStyleBackColor = true;
@@ -270,28 +288,37 @@
             this.comboListFiles.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboListFiles.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboListFiles.FormattingEnabled = true;
-            this.comboListFiles.Location = new System.Drawing.Point(322, 4);
+            this.comboListFiles.Location = new System.Drawing.Point(360, 4);
             this.comboListFiles.Name = "comboListFiles";
-            this.comboListFiles.Size = new System.Drawing.Size(329, 21);
+            this.comboListFiles.Size = new System.Drawing.Size(291, 21);
             this.comboListFiles.TabIndex = 2;
             // 
             // lboxShowFiles
             // 
             this.lboxShowFiles.FormattingEnabled = true;
-            this.lboxShowFiles.Location = new System.Drawing.Point(86, 4);
+            this.lboxShowFiles.Location = new System.Drawing.Point(110, 4);
             this.lboxShowFiles.Name = "lboxShowFiles";
-            this.lboxShowFiles.Size = new System.Drawing.Size(209, 303);
+            this.lboxShowFiles.Size = new System.Drawing.Size(244, 524);
             this.lboxShowFiles.TabIndex = 1;
             // 
             // btnListFolder
             // 
-            this.btnListFolder.Location = new System.Drawing.Point(4, 4);
+            this.btnListFolder.Location = new System.Drawing.Point(5, 4);
             this.btnListFolder.Name = "btnListFolder";
-            this.btnListFolder.Size = new System.Drawing.Size(75, 23);
+            this.btnListFolder.Size = new System.Drawing.Size(100, 25);
             this.btnListFolder.TabIndex = 0;
             this.btnListFolder.Text = "List mappe";
             this.btnListFolder.UseVisualStyleBackColor = true;
             this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
+            // 
+            // btnRescanFolder
+            // 
+            this.btnRescanFolder.Location = new System.Drawing.Point(958, 4);
+            this.btnRescanFolder.Name = "btnRescanFolder";
+            this.btnRescanFolder.Size = new System.Drawing.Size(200, 26);
+            this.btnRescanFolder.TabIndex = 27;
+            this.btnRescanFolder.Text = "Scan mappe  på nytt";
+            this.btnRescanFolder.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -299,16 +326,17 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 811);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Check check v0.6";
+            this.Text = "Check check v0.6.5";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
+            this.tabPageMain.ResumeLayout(false);
+            this.tabPageMain.PerformLayout();
+            this.tabPageScript.ResumeLayout(false);
+            this.tabPageSelect.ResumeLayout(false);
+            this.tabPageSelect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -324,9 +352,9 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label lblChosenDubber;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPageMain;
+        private System.Windows.Forms.TabPage tabPageScript;
+        private System.Windows.Forms.TabPage tabPageSelect;
         private System.Windows.Forms.ListBox lboxShowFiles;
         private System.Windows.Forms.Button btnListFolder;
         private System.Windows.Forms.ComboBox comboListFiles;
@@ -336,8 +364,10 @@
         private System.Windows.Forms.Label lblChosenEpisodeFrontpage;
         private System.Windows.Forms.Button btnCheckAllEps;
         private System.Windows.Forms.Label lblTotalNumLines;
-        private System.Windows.Forms.Button btnRescanFolder;
         private System.Windows.Forms.Label lblScanMessage;
+        private System.Windows.Forms.CheckBox chckPlakat;
+        private System.Windows.Forms.CheckBox chckIntro;
+        private System.Windows.Forms.Button btnRescanFolder;
     }
 }
 

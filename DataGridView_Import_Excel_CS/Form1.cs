@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Collections.Generic;
 using System.Drawing;
-
+using DocumentFormat.OpenXml.CustomProperties;
 
 namespace DataGridView_Import_Excel
 {
@@ -20,11 +20,12 @@ namespace DataGridView_Import_Excel
 
         public Form1()
         {
-            InitializeComponent();
-            //Utils.listFiles(lboxShowFiles, comboListFiles); // slett            
+            InitializeComponent();               
             allProductions = scanDubtoolFolder();
+
             //calculateAllSeriesAndEpisodes(allProductions, "");
             flowLayoutPanel1.BackColor = Color.LightBlue;
+            tabControl1.SelectedTab = tabPageSelect;
             lblChosenDubber.Font = new Font("Arial", 16, FontStyle.Bold);
             lblChosenDubber.ForeColor = Color.Red;
 
@@ -35,10 +36,10 @@ namespace DataGridView_Import_Excel
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Save();
         }
 
-        // == Velger fila som er valgt i dropdown-boks ==
+        // == Velger fila som er valgt i list-boks ==
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
             //if (comboListFiles.SelectedItem != null)
@@ -51,7 +52,7 @@ namespace DataGridView_Import_Excel
                  
                 // Laster inn valgte fil inn i minnet
                 findFileFromSelection(selectedFile);
-                tabControl1.SelectedTab = tabPage1;
+                tabControl1.SelectedTab = tabPageMain;
                 
             }
             else
@@ -64,7 +65,7 @@ namespace DataGridView_Import_Excel
         {
             if (chosenExcelFileDataTable.Rows.Count == 0)
             {
-                tabControl1.SelectedTab = tabPage4;
+                tabControl1.SelectedTab = tabPageSelect;
             }
             else
             {
@@ -83,7 +84,8 @@ namespace DataGridView_Import_Excel
         private void btnSelect_Click(object sender, EventArgs e)
         {
             string filePath;
-            filePath = @"C:\dubtool\"; // this is the path that you are checking.
+            //filePath = @"C:\dubtool\"; // this is the path that you are checking.
+            filePath = Utils.dubToolDir;
             if (Directory.Exists(filePath))
             {
                 openFileDialog1.InitialDirectory = filePath;
@@ -193,6 +195,10 @@ namespace DataGridView_Import_Excel
                     dtc.Add(dinfo.ToString() + file.Name.ToString());
                     //dtc[c].Replace(@"\\", @"\");
                 }
+            }
+            else
+            {
+                MessageBox.Show("Kan ikke finne Dubtool-mappe...", "Hei du!");
             }
             return dtc;
         }
@@ -361,7 +367,7 @@ namespace DataGridView_Import_Excel
         {
             List<Episode> episodeList = calculateSearchResultsByEpisode(dt, searchString);
             
-            PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
+            PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro, chckPlakat);
         }
 
         // Regner ut alle seriene 
@@ -376,7 +382,7 @@ namespace DataGridView_Import_Excel
                 if (episodeList.Count > 0)
                 {
                     //seriesName = item.seriesName.ToString();
-                    totNumLines = totNumLines + PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
+                    totNumLines = totNumLines + PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro, chckPlakat);
                 }
 
                 // Må gi Utskriften en mulighet til å skrive ut navn på eps

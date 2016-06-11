@@ -39,8 +39,9 @@ namespace DataGridView_Import_Excel
         
                 foreach (var file in folderContent)
                 {
-                    listbox.Items.Add(file);
+                    
                     onlyFileName = file.Substring(dubToolDir.Length, file.Length - dubToolDir.Length - 4);
+                    listbox.Items.Add(onlyFileName);
                     combobox.Items.Add(onlyFileName);
                 }         
         }
