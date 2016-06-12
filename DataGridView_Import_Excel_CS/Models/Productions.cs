@@ -38,11 +38,10 @@ namespace DataGridView_Import_Excel
             return t;
         }
 
-
     }
         internal class RoleNameAndListOfEpisodes
     {
-        // Liste over episoder hvor den rolle hører til
+        // Liste over episoder hvor den rollen hører til
         public List<string> episodes { get; set; }
         public string roleName { get; set; }
     }
@@ -59,6 +58,7 @@ namespace DataGridView_Import_Excel
     {
         public string roleName { get; set; }
         public string numOfLines { get; set; }
+        
     }
 
 }

@@ -22,7 +22,6 @@ namespace DataGridView_Import_Excel
                     //lbl.ForeColor = Color.Red;
                     lbl.AutoSize = true;
 
-
                     for (int eps = 0; eps < item.episodes.Count; eps++)
                     {
                         lbl.Text += item.episodes[eps].ToString() + ", ";
@@ -36,9 +35,11 @@ namespace DataGridView_Import_Excel
             }
         }
 
-         public static int printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel, CheckBox checkBoxNoIntro, CheckBox checkBoxNoPlakat)
+         public static int printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel, CheckBox checkBoxNoIntro)
         {
             int totNumLines = 0;
+            
+
             foreach (var item in episodeList)
             {
                 if (item.roleNames.Count > 0)
@@ -56,26 +57,23 @@ namespace DataGridView_Import_Excel
                     lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + ": ";
                                        
                     string resultTemp = "";
-                    //string result = seriesName + "\r\n" + "Episode " + item.episodeNumber.ToString() + ": "; 
-                                         
+                                          
                     resultTemp += Environment.NewLine;
                     
                     for (int role = 0; role < item.roleNames.Count; role += 1)
                     {
-                        if (!((checkBoxNoIntro.Checked && item.roleNames[role].roleName.ToString().ToLower() == "intro") || (checkBoxNoPlakat.Checked && item.roleNames[role].roleName.ToString().ToLower() == "plakat")))
+                        if (!(checkBoxNoIntro.Checked && (item.roleNames[role].roleName.ToString().ToLower() == "intro" || item.roleNames[role].roleName.ToString().ToLower() == "outro" || item.roleNames[role].roleName.ToString().ToLower() == "plakat")))
                         {
                             resultTemp += item.roleNames[role].roleName.ToString() + ": " + item.roleNames[role].numOfLines.ToString() + ", ";
 
                             // Regner ut antall replikker
                             totNumLinesPrEpisode += Convert.ToInt32(item.roleNames[role].numOfLines);
                             totNumLines += totNumLinesPrEpisode;
-                        }
-                        
-
+                        }                      
                     }
                     // Tar bort komma:
                     string result = resultTemp.Substring(0, resultTemp.Length - 2);
-                    result += " || Totalt " + totNumLinesPrEpisode.ToString() + " replikker.";
+                    result += " || Totalt " + totNumLinesPrEpisode.ToString() + " rep.";
 
                     if (totNumLinesPrEpisode > 0)
                     {
@@ -92,7 +90,6 @@ namespace DataGridView_Import_Excel
                         resultPanel.Controls.Add(lblHeading);
                         resultPanel.Controls.Add(lbl);
                     }
-
                     
                 }
             }
@@ -101,13 +98,13 @@ namespace DataGridView_Import_Excel
 
         
 
-        public static void CalculateAllEpisodes(NordubbProductions productions, FlowLayoutPanel resultPanel)
-        {
-            foreach (var item in productions.productions)
-            {
-                //printResultByEpisode(item.frontPageDataTable, panel);
-            }
-        }
+        //public static void CalculateAllEpisodes(NordubbProductions productions, FlowLayoutPanel resultPanel)
+        //{
+        //    foreach (var item in productions.productions)
+        //    {
+        //        //printResultByEpisode(item.frontPageDataTable, panel);
+        //    }
+        //}
        
     }
 }

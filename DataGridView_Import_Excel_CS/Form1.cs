@@ -16,22 +16,27 @@ namespace DataGridView_Import_Excel
 
         NordubbProductions allProductions = new NordubbProductions();
         DataTable chosenExcelFileDataTable = new DataTable();
-        //Utils utils = new Utils();
+        //public static string dubToolDir = @"C:\dubtool\";
+
 
         public Form1()
         {
             InitializeComponent();               
             allProductions = scanDubtoolFolder();
-
-            //calculateAllSeriesAndEpisodes(allProductions, "");
+            
             flowLayoutPanel1.BackColor = Color.LightBlue;
-            tabControl1.SelectedTab = tabPageSelect;
-            lblChosenDubber.Font = new Font("Arial", 16, FontStyle.Bold);
-            lblChosenDubber.ForeColor = Color.Red;
-
+            //tabControl1.SelectedTab = tabPageSelect;
+            
+            lblTotalNumLines.Font = new Font("Arial", 16);
+            
             // Trial-nedteller
-            StartCountdown();
-           
+            StartCountdown();          
+        }
+
+        // Globale variabler
+        public class Variables
+        {
+            public static DataTable theTable { get; set; }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -51,13 +56,13 @@ namespace DataGridView_Import_Excel
                 lblChosenEpisodeFrontpage.Text = "Du har valgt: " + selectedFile;
                  
                 // Laster inn valgte fil inn i minnet
-                findFileFromSelection(selectedFile);
+                findFileFromSelectionAndPrintOut(selectedFile);
                 tabControl1.SelectedTab = tabPageMain;
                 
             }
             else
             {
-                lblFileChosen.Text = "Du må velge en fil...";
+                lblFileChosen.Text = "Du må velge en serie...";
             }
         }
 
@@ -65,7 +70,7 @@ namespace DataGridView_Import_Excel
         {
             if (chosenExcelFileDataTable.Rows.Count == 0)
             {
-                tabControl1.SelectedTab = tabPageSelect;
+                MessageBox.Show("Velg en serie din løk.");
             }
             else
             {
@@ -99,28 +104,18 @@ namespace DataGridView_Import_Excel
 
         // Scanner folder og henter inn alle manusene i minnet og fyller opp listboks og comboboks
         public NordubbProductions scanDubtoolFolder()
-        {            
-            string conStr;
+        {   
+            string conStr;                     
             conStr = string.Empty;
             string sheetName;
             string searchString = txtActorName.Text.ToString().ToLower();
 
             List<string> dtc = new List<string>();
             dtc = getDubtoolFolderContent();
-            Utils.listFilesFromMemoryList(dtc, lboxShowFiles, comboListFiles);  // Fyller opp listboksen og comboboksen         
 
-            //switch (extension)
-            //{
-            //    case ".xls": //Excel 97-03
-            //        conStr = string.Format(Excel03ConString, filePath);
-
-            //        break;
-
-            //    case ".xlsx": //Excel 07
-            //        conStr = string.Format(Excel07ConString, filePath);
-            //        break;
-            //}
-
+            // Fyller opp listboksen og comboboksen:       
+            Utils.listFilesFromMemoryList(dtc, lboxShowFiles, comboListFiles);
+            
             int counter = 0;
             foreach (var excelFile in dtc) // Fylle opp en liste med DataTables
             {
@@ -131,11 +126,20 @@ namespace DataGridView_Import_Excel
                 {
                     using (OleDbCommand cmd = new OleDbCommand())
                     {
-                        cmd.Connection = con;
-                        con.Open();
-                        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                        con.Close();
+                        try
+                        {
+                            cmd.Connection = con;
+                            con.Open();
+                            DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                            sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                            con.Close();
+                        }
+                        catch (OleDbException e)
+                        {
+                            MessageBox.Show("Får ikke åpnet en av Excel-filene. Virker som den er åpen et annet sted...", e.Message);
+                            break;
+                        }
+                        
                     }
                 }
 
@@ -170,12 +174,6 @@ namespace DataGridView_Import_Excel
                     }
                 }
             }
-            //Populate DataGridView
-            //Variables.theTable = dt;
-            txtActorName.Visible = true;
-            
-            //calculateRoles(dt, searchString);
-            //calculateResultsByEpisode(dt, searchString);
             
             return allProductions;
         }
@@ -223,9 +221,7 @@ namespace DataGridView_Import_Excel
                     conStr = string.Format(Excel07ConString, filePath);
                     break;
             }
-            //ScanFolder sc = new ScanFolder();
-            //sc.GetNameFromFirstSheet(conStr);
-
+            
 
             //Get the name of the First Sheet.
             using (OleDbConnection con = new OleDbConnection(conStr))
@@ -268,106 +264,16 @@ namespace DataGridView_Import_Excel
                 }
             }
         }
-        // Lister opp alt -- fjernes?
-        //public void calculateRoles(DataTable dt, string searchString)
-        //{
-        //    int counter = 0;
-        //    string currRole = "";
-        //    var listRoles = new List<string>();
-        //    listRoles.Add("");
-
-        //    for (int i = 0; i < dt.Rows.Count; i++)
-        //    {
-        //        currRole = dt.Rows[i][3].ToString().ToLower();
-
-        //        if (currRole.Contains(searchString))
-        //        {
-        //            counter++;
-        //        }
-        //    }
-        //    calculateSearchResultsByEpisode(dt, searchString);
-        //}
-
-        private void calculateResultByRole(DataTable dt, string queryActor)
-        {
-            // Finn første rad med rolle
-            string currActor = "";
-            string currEpsLines = "";
-
-            string linesTotal;
-            string linesDone;
-            string[] linesArray;
-
-            var rolesList = new List<RoleNameAndListOfEpisodes>(); // Dette er en liste med karakterer, karakterer har navn og de eps den mangler i
-
-            lblChosenDubber.Font = new Font("Arial", 20);
-            lblChosenDubber.Text = queryActor.ToString().ToUpper();
-
-            // Går gjennom alle radene:
-            for (int i = 5; i < dt.Rows.Count; i++) // i er raden
-            {
-                currActor = dt.Rows[i][3].ToString().ToLower(); // Skp i aktuell rad
-
-                if (currActor.Contains(queryActor)) // Vi finner en match
-                {
-
-                    RoleNameAndListOfEpisodes characters = new RoleNameAndListOfEpisodes(); // Oppretter et ny karakterobjekt
-                    characters.roleName = dt.Rows[i][1].ToString(); // Legger til rollenavnet
-                    characters.episodes = new List<string>();
-                    rolesList.Add(characters);
-                    string epNumber;
-
-                    for (int j = 4; j < 17; j++) // j er kolonnen, kompansert for 
-                    {
-                        currEpsLines = dt.Rows[i][j].ToString().ToLower();
-                        linesArray = currEpsLines.Split(new char[] { '/' }, StringSplitOptions.None);
-
-                        if (linesArray.Length == 2)
-                        {
-                            linesDone = linesArray[0];
-                            linesTotal = linesArray[1];
-
-                            if (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone) > 0)
-                            {
-                                // Må finne episodenummer i kolonne:
-                                epNumber = dt.Rows[2][j].ToString();
-                                characters.episodes.Add(epNumber);
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            PrintResult.printResultByRoles(rolesList, flowLayoutPanel1); // Skriver ut pr rolle          
-        }
-
-        
-        // Globale variabler
-        public class Variables
-        {
-            public static DataTable theTable { get; set; }
-        }
-
-
-        private void btnViewScript_Click(object sender, EventArgs e)
-        {
-
-            if (!dataGridView1.Visible)
-            {
-                dataGridView1.Visible = true;
-            }
-            else
-            {
-                dataGridView1.Visible = false;
-            }
-        }
-
+            
+        // Regner ut valgt serie
         public void calculateByOneEpisode(DataTable dt, string searchString)
         {
             List<Episode> episodeList = calculateSearchResultsByEpisode(dt, searchString);
-            
-            PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro, chckPlakat);
+
+            int totNumLines = PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro);
+            decimal t = decimal.Round((Convert.ToDecimal(totNumLines) / 90), 2);
+            lblTotalNumLines.Text = "TOTALT antall replikker: " + Convert.ToString(totNumLines) + ". Det vil ta " + t + " timer å dubbe ferdig.";
+
         }
 
         // Regner ut alle seriene 
@@ -379,18 +285,19 @@ namespace DataGridView_Import_Excel
                 //string seriesName = "";
 
                 List<Episode> episodeList = calculateSearchResultsByEpisode(item.frontPageDataTable, searchString);
+
                 if (episodeList.Count > 0)
                 {
                     //seriesName = item.seriesName.ToString();
-                    totNumLines = totNumLines + PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro, chckPlakat);
+                    totNumLines = totNumLines + PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro);
                 }
 
                 // Må gi Utskriften en mulighet til å skrive ut navn på eps
 
             }
             ;
-            lblTotalNumLines.Font = new Font("Arial", 16);
-            lblTotalNumLines.Text = "TOTALT antall replikker: " + totNumLines.ToString();       
+            decimal t = decimal.Round((Convert.ToDecimal(totNumLines) / 90), 2);
+            lblTotalNumLines.Text = "TOTALT antall replikker: " + totNumLines.ToString() + ".  Det vil ta " + t + " timer å dubbe ferdig.";       
         }
 
         // En Episode-class består av Episodenummer og Role med antall linjer
@@ -415,16 +322,18 @@ namespace DataGridView_Import_Excel
                 episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
                 episodeList.Add(episode);
                 string currentRoleName;
-                string currentRoleLineNumbers;
-
+                string currentRoleLineNumbersString;
+                
                 // Nedover
                 for (int row = 5; row < dt.Rows.Count; row++)
                 {
-                    if (dt.Rows[row][epColumn] != null) // Hvis kolonnen ikke er tom
+                    // Hvis kolonnen ikke er tom..
+                    if (dt.Rows[row][epColumn] != null) 
                     {
-
+                        // Hvis skuespillercellen inneholder søkestrengen..
                         if (dt.Rows[row][3].ToString().ToLower().Contains(searchString))
                         {
+                            // Deler opp replikk-cellen
                             currEpsLines = dt.Rows[row][epColumn].ToString().ToLower();
                             linesArray = currEpsLines.Split(new char[] { '/' }, StringSplitOptions.None);
 
@@ -432,20 +341,21 @@ namespace DataGridView_Import_Excel
                             {
                                 linesDone = linesArray[0];
                                 linesTotal = linesArray[1];
-
+                                
                                 // Sjekker om det er mer enn 0 replikker igjen:
                                 if (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone) > 0)
                                 {
-                                    // Må finne episodenummer i kolonne:
+                                    // Finner episodenummer i kolonne:
                                     currentRoleName = dt.Rows[row][1].ToString().ToUpper();
-                                    currentRoleLineNumbers = (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone)).ToString();
+                                    currentRoleLineNumbersString = (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone)).ToString();
 
                                     var r = new RoleNameAndNumOfLines
                                     {
                                         roleName = currentRoleName,
-                                        numOfLines = currentRoleLineNumbers
+                                        numOfLines = currentRoleLineNumbersString                                        
                                     };
 
+                                    // Legger til rollenavnet i episoden:
                                     episode.roleNames.Add(r);
 
                                 }
@@ -454,8 +364,7 @@ namespace DataGridView_Import_Excel
                     }
                 }
             }
-
-            //PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1);
+           
             return episodeList;
         }
 
@@ -482,15 +391,14 @@ namespace DataGridView_Import_Excel
         
 
         // Laster inn valgte fil/episode i DataTable
-        private void findFileFromSelection(string selectedFile)
+        private void findFileFromSelectionAndPrintOut(string selectedFile)
         {
             foreach (var episode in allProductions.productions)
             {
                 if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
                 {
                     dataGridView1.DataSource = episode.frontPageDataTable;
-                    chosenExcelFileDataTable = episode.frontPageDataTable;
-                    //calculateAllEpisodes(chosenExcelFileDataTable, txtActorName.Text.ToString());
+                    chosenExcelFileDataTable = episode.frontPageDataTable;                    
                     calculateByOneEpisode(chosenExcelFileDataTable, txtActorName.Text.ToString());
                     
                 }
@@ -516,12 +424,6 @@ namespace DataGridView_Import_Excel
             string searchString = txtActorName.Text.ToString();
             calculateAllSeriesAndEpisodes(allProductions, searchString);
         }
-
-        private void btnRescanFolder_Click(object sender, EventArgs e)
-        {           
-            scanDubtoolFolder();            
-        }
-
         
 
         private void StartCountdown()
@@ -544,6 +446,37 @@ namespace DataGridView_Import_Excel
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {            
             Application.Exit();
+        }
+
+        private void btnRescanFolder_Click_1(object sender, EventArgs e)
+        {
+            scanDubtoolFolder();
+        }
+
+        private void comboListFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedFile = comboListFiles.SelectedItem.ToString();
+            chooseEpisode(selectedFile);           
+        }
+
+        private void btnChooseFile_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lboxShowFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedFile = lboxShowFiles.SelectedItem.ToString();
+            chooseEpisode(selectedFile);          
+        }
+
+        // Finner valgte fil i liste eller combobox
+        private void chooseEpisode(string selectedFile)
+        {
+            lblChosenEpisodeFrontpage.Text = "Du har valgt: " + selectedFile;
+            flowLayoutPanel1.Controls.Clear();
+            // Laster inn valgte fil inn i minnet og skriver ut
+            findFileFromSelectionAndPrintOut(selectedFile);
         }
     }
 }
