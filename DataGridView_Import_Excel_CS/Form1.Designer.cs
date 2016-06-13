@@ -39,6 +39,8 @@
             this.lblChosenDubber = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageMain = new System.Windows.Forms.TabPage();
+            this.lboxShowFiles = new System.Windows.Forms.ListBox();
+            this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.chckIntro = new System.Windows.Forms.CheckBox();
             this.lblScanMessage = new System.Windows.Forms.Label();
             this.lblTotalNumLines = new System.Windows.Forms.Label();
@@ -49,8 +51,6 @@
             this.btnRescanFolder = new System.Windows.Forms.Button();
             this.lblFileChosen = new System.Windows.Forms.Label();
             this.btnListFolder = new System.Windows.Forms.Button();
-            this.comboListFiles = new System.Windows.Forms.ComboBox();
-            this.lboxShowFiles = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPageMain.SuspendLayout();
@@ -171,6 +171,25 @@
             this.tabPageMain.Text = "Hoved";
             this.tabPageMain.UseVisualStyleBackColor = true;
             // 
+            // lboxShowFiles
+            // 
+            this.lboxShowFiles.FormattingEnabled = true;
+            this.lboxShowFiles.Location = new System.Drawing.Point(7, 121);
+            this.lboxShowFiles.Name = "lboxShowFiles";
+            this.lboxShowFiles.Size = new System.Drawing.Size(190, 628);
+            this.lboxShowFiles.TabIndex = 31;
+            this.lboxShowFiles.SelectedIndexChanged += new System.EventHandler(this.lboxShowFiles_SelectedIndexChanged);
+            // 
+            // comboListFiles
+            // 
+            this.comboListFiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboListFiles.FormattingEnabled = true;
+            this.comboListFiles.Location = new System.Drawing.Point(691, 7);
+            this.comboListFiles.Name = "comboListFiles";
+            this.comboListFiles.Size = new System.Drawing.Size(213, 21);
+            this.comboListFiles.TabIndex = 0;
+            this.comboListFiles.SelectedIndexChanged += new System.EventHandler(this.comboListFiles_SelectedIndexChanged);
+            // 
             // chckIntro
             // 
             this.chckIntro.AutoSize = true;
@@ -270,25 +289,6 @@
             this.btnListFolder.UseVisualStyleBackColor = true;
             this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
             // 
-            // comboListFiles
-            // 
-            this.comboListFiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboListFiles.FormattingEnabled = true;
-            this.comboListFiles.Location = new System.Drawing.Point(691, 7);
-            this.comboListFiles.Name = "comboListFiles";
-            this.comboListFiles.Size = new System.Drawing.Size(213, 21);
-            this.comboListFiles.TabIndex = 0;
-            this.comboListFiles.SelectedIndexChanged += new System.EventHandler(this.comboListFiles_SelectedIndexChanged);
-            // 
-            // lboxShowFiles
-            // 
-            this.lboxShowFiles.FormattingEnabled = true;
-            this.lboxShowFiles.Location = new System.Drawing.Point(7, 121);
-            this.lboxShowFiles.Name = "lboxShowFiles";
-            this.lboxShowFiles.Size = new System.Drawing.Size(190, 628);
-            this.lboxShowFiles.TabIndex = 31;
-            this.lboxShowFiles.SelectedIndexChanged += new System.EventHandler(this.lboxShowFiles_SelectedIndexChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -299,7 +299,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Check check v0.7";
+            this.Text = "Check check v0.7.5";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPageMain.ResumeLayout(false);

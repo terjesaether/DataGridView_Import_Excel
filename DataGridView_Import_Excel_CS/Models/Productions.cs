@@ -52,6 +52,7 @@ namespace DataGridView_Import_Excel
         public string seriesName { get; set; }
         //public List<Dictionary<string, string>> roleNamesDic { get; set; }
         public List<RoleNameAndNumOfLines> roleNames { get; set; }
+        public string deliveryDate { get; set; }
     }
     
     public class RoleNameAndNumOfLines

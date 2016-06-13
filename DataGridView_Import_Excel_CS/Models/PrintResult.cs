@@ -54,7 +54,7 @@ namespace DataGridView_Import_Excel
                     lblHeading.ForeColor = Color.Wheat;
                     lblHeading.AutoSize = true;
                     
-                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + ": ";
+                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + ": . Leveres " + item.deliveryDate.ToString();
                                        
                     string resultTemp = "";
                                           

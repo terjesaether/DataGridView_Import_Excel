@@ -319,6 +319,7 @@ namespace DataGridView_Import_Excel
                 Episode episode = new Episode(); // Oppretter et ny episodeobjekt
                 episode.episodeNumber = dt.Rows[2][epColumn].ToString(); // Legger til epnr
                 episode.seriesName = dt.Rows[0][0].ToString();
+                episode.deliveryDate = dt.Rows[4][epColumn].ToString();
                 episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
                 episodeList.Add(episode);
                 string currentRoleName;
