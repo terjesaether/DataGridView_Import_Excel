@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using NordubbCheckRoles;
 
 namespace DataGridView_Import_Excel
-{ 
+{
 
     class Utils
     {
 
-    public static string dubToolDir = @"C:\dubtool\";
+   public const string dubToolDir = @"C:\dubtool\";
 
         public static void listFiles(ListBox listbox, ComboBox combobox)
         {
@@ -32,10 +28,10 @@ namespace DataGridView_Import_Excel
         
         }
         // Fyller ut listboks og combobox
-        public static void listFilesFromMemoryList(List<string> folderContent, ListBox listbox, ComboBox combobox)
+        public static void listFilesFromMemoryList(List<string> folderContent, ListBox listbox)
         {
             listbox.Items.Clear();
-            combobox.Items.Clear();
+            
             string onlyFileName;
         
                 foreach (var file in folderContent)
@@ -43,11 +39,14 @@ namespace DataGridView_Import_Excel
                     
                     onlyFileName = file.Substring(dubToolDir.Length, file.Length - dubToolDir.Length - 4);
                     listbox.Items.Add(onlyFileName);
-                    combobox.Items.Add(onlyFileName);
+                    //combobox.Items.Add(onlyFileName);
                 }         
         }
 
         
+
+        
+
 
     }
 

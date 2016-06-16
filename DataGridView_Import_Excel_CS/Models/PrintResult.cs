@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -39,7 +37,6 @@ namespace DataGridView_Import_Excel
         {
             int totNumLines = 0;
             
-
             foreach (var item in episodeList)
             {
                 if (item.roleNames.Count > 0)
@@ -48,14 +45,52 @@ namespace DataGridView_Import_Excel
                     Label lbl = new Label();
                     lbl.Font = new Font("Arial", 14);
                     lbl.AutoSize = true;
+                    TimeSpan span = new TimeSpan();
+                    string warningText = "";
+                    string daysText = " dager.";
+                    string deliveryText = "";
 
+                    if (item.deliveryDate.ToString() != "")
+                    {
+                        try
+                        {
+                            DateTime deliveryDate = Convert.ToDateTime(item.deliveryDate.ToString());
+                            span = deliveryDate.Subtract(DateTime.Now);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Åh heisann! Virker som det er et excelark som ikke er i orden. Kan det være " + item.seriesName.ToString() + ", ep " + item.episodeNumber.ToString() + " ?");
+                            break;
+                        }
+                        
+                        if (span.Days < 5)
+                        {
+                            warningText = " På tide å KLIPPE!!";
+                        }
+                        deliveryText = ". Skal leveres om " + span.Days.ToString() + daysText + warningText;
+                    }
+                                   
                     Label lblHeading = new Label();
-                    lblHeading.BackColor = Color.Red;
-                    lblHeading.ForeColor = Color.Wheat;
+                    lblHeading.BackColor = Color.DarkBlue;
+                    lblHeading.ForeColor = Color.WhiteSmoke;
                     lblHeading.AutoSize = true;
-                    
-                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + ": . Leveres " + item.deliveryDate.ToString();
-                                       
+
+                    Label lblEpNumber = new Label();
+                    lblEpNumber.BackColor = Color.Green;
+                    lblEpNumber.ForeColor = Color.WhiteSmoke;
+                    lblEpNumber.Font = new Font("Arial", 16);
+                    lblEpNumber.AutoSize = true;
+
+
+                    if (span.Days == 1)
+                    {
+                        daysText = " dag.";
+                    }
+
+                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + deliveryText;
+
+                    lblEpNumber.Text = "Ep: " + item.episodeNumber.ToString();
+                                                          
                     string resultTemp = "";
                                           
                     resultTemp += Environment.NewLine;
@@ -88,6 +123,7 @@ namespace DataGridView_Import_Excel
 
                         lbl.Text = result;
                         resultPanel.Controls.Add(lblHeading);
+                        resultPanel.Controls.Add(lblEpNumber);
                         resultPanel.Controls.Add(lbl);
                     }
                     

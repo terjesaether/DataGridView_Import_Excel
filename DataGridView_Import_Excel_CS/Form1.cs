@@ -6,6 +6,9 @@ using System.Data.OleDb;
 using System.Collections.Generic;
 using System.Drawing;
 using DocumentFormat.OpenXml.CustomProperties;
+using Microsoft.VisualBasic;
+using System.Net.Sockets;
+using System.Net;
 
 namespace DataGridView_Import_Excel
 {
@@ -16,21 +19,37 @@ namespace DataGridView_Import_Excel
 
         NordubbProductions allProductions = new NordubbProductions();
         DataTable chosenExcelFileDataTable = new DataTable();
-        //public static string dubToolDir = @"C:\dubtool\";
+        
+        // Dato for å lage en uløpsdato. FInner dagens dato fra nettet
+        DateTime expDate = new DateTime(2016, 8, 15);
+        //DateTime systemTime = DateTime.Now;
+        DateTime systemTime = GetNetworkTime();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (DateTime.Compare(systemTime, expDate) > 0)
+            {
+                string promptValue = Prompt.ShowDialog("Enter password", "Log in...");
+                if (promptValue != "drikk")
+                {
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                    Application.Exit();
+                }
+            }
+
+            allProductions = scanDubtoolFolder();
+
+            flowLayoutPanel1.BackColor = Color.LightBlue;
+            //tabControl1.SelectedTab = tabPageSelect;
+
+            lblTotalNumLines.Font = new Font("Arial", 16);
+        }
 
 
         public Form1()
         {
-            InitializeComponent();               
-            allProductions = scanDubtoolFolder();
-            
-            flowLayoutPanel1.BackColor = Color.LightBlue;
-            //tabControl1.SelectedTab = tabPageSelect;
-            
-            lblTotalNumLines.Font = new Font("Arial", 16);
-            
-            // Trial-nedteller
-            StartCountdown();          
+            InitializeComponent();
+                  
         }
 
         // Globale variabler
@@ -39,33 +58,38 @@ namespace DataGridView_Import_Excel
             public static DataTable theTable { get; set; }
         }
 
+        public static class Prompt
+        {
+            public static string ShowDialog(string text, string caption)
+            {
+                Form prompt = new Form()
+                {
+                    Width = 400,
+                    Height = 150,
+                    FormBorderStyle = FormBorderStyle.FixedDialog,
+                    Text = caption,
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+                Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
+                TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 300 };
+                textBox.PasswordChar = '*';
+                Button confirmation = new Button() { Text = "Ok", Left = 250, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+                confirmation.Click += (sender, e) => { prompt.Close(); };
+                prompt.Controls.Add(textBox);
+                prompt.Controls.Add(confirmation);
+                prompt.Controls.Add(textLabel);
+                prompt.AcceptButton = confirmation;
+
+                return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+            }
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             //Properties.Settings.Default.Save();
         }
 
-        // == Velger fila som er valgt i list-boks ==
-        private void btnChooseFile_Click(object sender, EventArgs e)
-        {
-            //if (comboListFiles.SelectedItem != null)
-            if (lboxShowFiles.SelectedItem != null)
-            {
-                //string selectedFile = comboListFiles.SelectedItem.ToString();
-                string selectedFile = lboxShowFiles.SelectedItem.ToString();
-                lblFileChosen.Text = "Du har valgt: " + selectedFile;
-                lblChosenEpisodeFrontpage.Text = "Du har valgt: " + selectedFile;
-                 
-                // Laster inn valgte fil inn i minnet
-                findFileFromSelectionAndPrintOut(selectedFile);
-                tabControl1.SelectedTab = tabPageMain;
-                
-            }
-            else
-            {
-                lblFileChosen.Text = "Du må velge en serie...";
-            }
-        }
-
+       
         private void btnCheckActor_Click(object sender, EventArgs e)
         {
             if (chosenExcelFileDataTable.Rows.Count == 0)
@@ -80,7 +104,6 @@ namespace DataGridView_Import_Excel
                 calculateByOneEpisode(chosenExcelFileDataTable, searchString);
                 //calculateAllSeriesAndEpisodes()
             }
-
 
 
         }
@@ -114,7 +137,7 @@ namespace DataGridView_Import_Excel
             dtc = getDubtoolFolderContent();
 
             // Fyller opp listboksen og comboboksen:       
-            Utils.listFilesFromMemoryList(dtc, lboxShowFiles, comboListFiles);
+            Utils.listFilesFromMemoryList(dtc, lboxShowFiles);
             
             int counter = 0;
             foreach (var excelFile in dtc) // Fylle opp en liste med DataTables
@@ -150,13 +173,14 @@ namespace DataGridView_Import_Excel
                     {
                         using (OleDbDataAdapter oda = new OleDbDataAdapter())
                         {
-                            DataTable dt = new DataTable();
+                            DataTable dt = new DataTable();                            
+                            //sheetName = "Forside";
                             cmd.CommandText = "SELECT * From [" + sheetName + "]";
                             cmd.Connection = con;
                             con.Open();
                             oda.SelectCommand = cmd;
                             oda.Fill(dt);
-                            //productionsList.Add(dt);
+                            
                             var excelFrontPage = new excelFrontPage();
                             excelFrontPage.frontPageDataTable = dt;
                             excelFrontPage.seriesName = dt.Rows[0][0].ToString();
@@ -173,15 +197,13 @@ namespace DataGridView_Import_Excel
                         }
                     }
                 }
-            }
-            
+            }           
             return allProductions;
         }
         // Laster inn dir-innhold i en liste i minnet
         public List<string> getDubtoolFolderContent()
         {
-            List<string> dtc = new List<string>();
-            //DirectoryInfo dinfo = new DirectoryInfo(@"C:\dubtool\");
+            List<string> dtc = new List<string>();            
             DirectoryInfo dinfo = new DirectoryInfo(Utils.dubToolDir);
 
             if (dinfo.Exists)
@@ -190,13 +212,20 @@ namespace DataGridView_Import_Excel
 
                 foreach (FileInfo file in Files)
                 {
-                    dtc.Add(dinfo.ToString() + file.Name.ToString());
-                    //dtc[c].Replace(@"\\", @"\");
+                    if (file.Extension == ".xls")
+                    {
+                        dtc.Add(dinfo.ToString() + file.Name.ToString());                       
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ser ut som det er noen uvedkommende filer i mappa...", "Fare!");
+                    }
+
                 }
             }
             else
             {
-                MessageBox.Show("Kan ikke finne Dubtool-mappe...", "Hei du!");
+                MessageBox.Show("Kan ikke finne Dubtool-mappe...", "Fare!");
             }
             return dtc;
         }
@@ -221,8 +250,8 @@ namespace DataGridView_Import_Excel
                     conStr = string.Format(Excel07ConString, filePath);
                     break;
             }
-            
 
+            //ScanFolder.StartFileScanning(conStr);
             //Get the name of the First Sheet.
             using (OleDbConnection con = new OleDbConnection(conStr))
             {
@@ -312,21 +341,50 @@ namespace DataGridView_Import_Excel
             var episodeList = new List<Episode>();
 
             lblChosenDubber.Text = searchString.ToString().ToUpper();
+            
 
             // Går gjennom alle kolonnene: [rad][kolonne]
             for (int epColumn = 4; epColumn <= 16; epColumn++)
             {
+                int rowCompensation = 0;
+
                 Episode episode = new Episode(); // Oppretter et ny episodeobjekt
-                episode.episodeNumber = dt.Rows[2][epColumn].ToString(); // Legger til epnr
+                
                 episode.seriesName = dt.Rows[0][0].ToString();
-                episode.deliveryDate = dt.Rows[4][epColumn].ToString();
+
+                // Sjekker om manuset er i orden: sjekker hvor tittelen står:
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (string.IsNullOrEmpty(episode.seriesName))
+                    {
+                        rowCompensation++;
+                        episode.seriesName = dt.Rows[rowCompensation][0].ToString();
+                        //break;                    
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                episode.episodeNumber = dt.Rows[2+rowCompensation][epColumn].ToString(); // Legger til epnr
+
+                //if (dt.Rows[0][0] == null)
+                //{
+                //    episode.seriesName = "";
+                //}
+                //else
+                //{
+                //    episode.seriesName = dt.Rows[0][0].ToString();                   
+                //}
+
+                episode.deliveryDate = dt.Rows[4+rowCompensation][epColumn].ToString();
                 episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
                 episodeList.Add(episode);
                 string currentRoleName;
                 string currentRoleLineNumbersString;
                 
                 // Nedover
-                for (int row = 5; row < dt.Rows.Count; row++)
+                for (int row = (5 + rowCompensation); row < dt.Rows.Count; row++)
                 {
                     // Hvis kolonnen ikke er tom..
                     if (dt.Rows[row][epColumn] != null) 
@@ -427,44 +485,19 @@ namespace DataGridView_Import_Excel
         }
         
 
-        private void StartCountdown()
-        {
-           
-            DateTime expDate = new DateTime(2016, 7, 1);
-            
-            if (DateTime.Compare(DateTime.Now, expDate) > 0)
-            {
-                int numberOfSeconds = 2000;
-                Random rnd = new Random();
-                numberOfSeconds += (rnd.Next(5, 30) * 1000);
-                lblScanMessage.Text = (numberOfSeconds / 1000).ToString();
-                var timer = new System.Timers.Timer(numberOfSeconds);
-                timer.Start();
-                timer.Elapsed += Timer_Elapsed;
-            }
-                  
-        }
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {            
-            Application.Exit();
-        }
+        
 
         private void btnRescanFolder_Click_1(object sender, EventArgs e)
         {
             scanDubtoolFolder();
         }
 
-        private void comboListFiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string selectedFile = comboListFiles.SelectedItem.ToString();
-            chooseEpisode(selectedFile);           
-        }
-
-        private void btnChooseFile_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
+        //private void comboListFiles_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    string selectedFile = comboListFiles.SelectedItem.ToString();
+        //    chooseEpisode(selectedFile);           
+        //}
+        
         private void lboxShowFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedFile = lboxShowFiles.SelectedItem.ToString();
@@ -478,6 +511,78 @@ namespace DataGridView_Import_Excel
             flowLayoutPanel1.Controls.Clear();
             // Laster inn valgte fil inn i minnet og skriver ut
             findFileFromSelectionAndPrintOut(selectedFile);
+        }
+
+        public static DateTime GetNetworkTime()
+        {
+            //default Windows time server
+            const string ntpServer = "time.windows.com";
+
+            // NTP message size - 16 bytes of the digest (RFC 2030)
+            var ntpData = new byte[48];
+
+            //Setting the Leap Indicator, Version Number and Mode values
+            ntpData[0] = 0x1B; //LI = 0 (no warning), VN = 3 (IPv4 only), Mode = 3 (Client Mode)
+
+            try
+            {
+                var addresses = Dns.GetHostEntry(ntpServer).AddressList;
+
+                //The UDP port number assigned to NTP is 123
+                var ipEndPoint = new IPEndPoint(addresses[0], 123);
+                //NTP uses UDP
+                var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+                socket.Connect(ipEndPoint);
+
+                //Stops code hang if NTP is blocked
+                socket.ReceiveTimeout = 3000;
+
+                socket.Send(ntpData);
+                socket.Receive(ntpData);
+                socket.Close();
+
+                //Offset to get to the "Transmit Timestamp" field (time at which the reply
+                //departed the server for the client, in 64-bit timestamp format."
+                const byte serverReplyTime = 40;
+
+                //Get the seconds part
+                ulong intPart = BitConverter.ToUInt32(ntpData, serverReplyTime);
+
+                //Get the seconds fraction
+                ulong fractPart = BitConverter.ToUInt32(ntpData, serverReplyTime + 4);
+
+                //Convert From big-endian to little-endian
+                intPart = SwapEndianness(intPart);
+                fractPart = SwapEndianness(fractPart);
+
+                var milliseconds = (intPart * 1000) + ((fractPart * 1000) / 0x100000000L);
+
+                //**UTC** time
+                var networkDateTime = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds((long)milliseconds);
+
+                return networkDateTime.ToLocalTime();
+            }
+            catch (Exception)
+            {
+                //MessageBox.Show(e.Message);
+                return DateTime.Now;
+            }            
+        }
+
+        // stackoverflow.com/a/3294698/162671
+        static uint SwapEndianness(ulong x)
+        {
+            return (uint)(((x & 0x000000ff) << 24) +
+                           ((x & 0x0000ff00) << 8) +
+                           ((x & 0x00ff0000) >> 8) +
+                           ((x & 0xff000000) >> 24));
+
+        }
+
+        private void btnRescanFolder_Click(object sender, EventArgs e)
+        {
+            allProductions = scanDubtoolFolder();
         }
     }
 }

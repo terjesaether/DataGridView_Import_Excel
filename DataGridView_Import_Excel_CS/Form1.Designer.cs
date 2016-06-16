@@ -39,23 +39,18 @@
             this.lblChosenDubber = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageMain = new System.Windows.Forms.TabPage();
+            this.btnRescanFolder = new System.Windows.Forms.Button();
             this.lboxShowFiles = new System.Windows.Forms.ListBox();
-            this.comboListFiles = new System.Windows.Forms.ComboBox();
             this.chckIntro = new System.Windows.Forms.CheckBox();
             this.lblScanMessage = new System.Windows.Forms.Label();
             this.lblTotalNumLines = new System.Windows.Forms.Label();
             this.btnCheckAllEps = new System.Windows.Forms.Button();
             this.lblChosenEpisodeFrontpage = new System.Windows.Forms.Label();
             this.tabPageScript = new System.Windows.Forms.TabPage();
-            this.tabPageSelect = new System.Windows.Forms.TabPage();
-            this.btnRescanFolder = new System.Windows.Forms.Button();
-            this.lblFileChosen = new System.Windows.Forms.Label();
-            this.btnListFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPageMain.SuspendLayout();
             this.tabPageScript.SuspendLayout();
-            this.tabPageSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -98,7 +93,7 @@
             this.btnCheckActor.Name = "btnCheckActor";
             this.btnCheckActor.Size = new System.Drawing.Size(200, 26);
             this.btnCheckActor.TabIndex = 8;
-            this.btnCheckActor.Text = "Sjekk døbber (velg episoder)";
+            this.btnCheckActor.Text = "Sjekk døbber på én bolk";
             this.btnCheckActor.UseVisualStyleBackColor = true;
             this.btnCheckActor.Click += new System.EventHandler(this.btnCheckActor_Click);
             // 
@@ -139,7 +134,6 @@
             // 
             this.tabControl1.Controls.Add(this.tabPageMain);
             this.tabControl1.Controls.Add(this.tabPageScript);
-            this.tabControl1.Controls.Add(this.tabPageSelect);
             this.tabControl1.ItemSize = new System.Drawing.Size(50, 28);
             this.tabControl1.Location = new System.Drawing.Point(10, 10);
             this.tabControl1.Name = "tabControl1";
@@ -150,8 +144,8 @@
             // 
             // tabPageMain
             // 
+            this.tabPageMain.Controls.Add(this.btnRescanFolder);
             this.tabPageMain.Controls.Add(this.lboxShowFiles);
-            this.tabPageMain.Controls.Add(this.comboListFiles);
             this.tabPageMain.Controls.Add(this.chckIntro);
             this.tabPageMain.Controls.Add(this.lblScanMessage);
             this.tabPageMain.Controls.Add(this.lblTotalNumLines);
@@ -171,6 +165,16 @@
             this.tabPageMain.Text = "Hoved";
             this.tabPageMain.UseVisualStyleBackColor = true;
             // 
+            // btnRescanFolder
+            // 
+            this.btnRescanFolder.Location = new System.Drawing.Point(965, 30);
+            this.btnRescanFolder.Name = "btnRescanFolder";
+            this.btnRescanFolder.Size = new System.Drawing.Size(200, 26);
+            this.btnRescanFolder.TabIndex = 28;
+            this.btnRescanFolder.Text = "Scan mappe  på nytt";
+            this.btnRescanFolder.UseVisualStyleBackColor = true;
+            this.btnRescanFolder.Click += new System.EventHandler(this.btnRescanFolder_Click);
+            // 
             // lboxShowFiles
             // 
             this.lboxShowFiles.FormattingEnabled = true;
@@ -179,16 +183,6 @@
             this.lboxShowFiles.Size = new System.Drawing.Size(190, 628);
             this.lboxShowFiles.TabIndex = 31;
             this.lboxShowFiles.SelectedIndexChanged += new System.EventHandler(this.lboxShowFiles_SelectedIndexChanged);
-            // 
-            // comboListFiles
-            // 
-            this.comboListFiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboListFiles.FormattingEnabled = true;
-            this.comboListFiles.Location = new System.Drawing.Point(691, 7);
-            this.comboListFiles.Name = "comboListFiles";
-            this.comboListFiles.Size = new System.Drawing.Size(213, 21);
-            this.comboListFiles.TabIndex = 0;
-            this.comboListFiles.SelectedIndexChanged += new System.EventHandler(this.comboListFiles_SelectedIndexChanged);
             // 
             // chckIntro
             // 
@@ -248,47 +242,6 @@
             this.tabPageScript.Text = "Manusforside";
             this.tabPageScript.UseVisualStyleBackColor = true;
             // 
-            // tabPageSelect
-            // 
-            this.tabPageSelect.Controls.Add(this.btnRescanFolder);
-            this.tabPageSelect.Controls.Add(this.lblFileChosen);
-            this.tabPageSelect.Controls.Add(this.btnListFolder);
-            this.tabPageSelect.Location = new System.Drawing.Point(4, 32);
-            this.tabPageSelect.Name = "tabPageSelect";
-            this.tabPageSelect.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSelect.Size = new System.Drawing.Size(1172, 764);
-            this.tabPageSelect.TabIndex = 3;
-            this.tabPageSelect.Text = "Velg episoder";
-            this.tabPageSelect.UseVisualStyleBackColor = true;
-            // 
-            // btnRescanFolder
-            // 
-            this.btnRescanFolder.Location = new System.Drawing.Point(958, 4);
-            this.btnRescanFolder.Name = "btnRescanFolder";
-            this.btnRescanFolder.Size = new System.Drawing.Size(200, 26);
-            this.btnRescanFolder.TabIndex = 27;
-            this.btnRescanFolder.Text = "Scan mappe  på nytt";
-            this.btnRescanFolder.UseVisualStyleBackColor = true;
-            this.btnRescanFolder.Click += new System.EventHandler(this.btnRescanFolder_Click_1);
-            // 
-            // lblFileChosen
-            // 
-            this.lblFileChosen.AutoSize = true;
-            this.lblFileChosen.Location = new System.Drawing.Point(8, 74);
-            this.lblFileChosen.Name = "lblFileChosen";
-            this.lblFileChosen.Size = new System.Drawing.Size(0, 13);
-            this.lblFileChosen.TabIndex = 4;
-            // 
-            // btnListFolder
-            // 
-            this.btnListFolder.Location = new System.Drawing.Point(5, 4);
-            this.btnListFolder.Name = "btnListFolder";
-            this.btnListFolder.Size = new System.Drawing.Size(100, 25);
-            this.btnListFolder.TabIndex = 0;
-            this.btnListFolder.Text = "List mappe";
-            this.btnListFolder.UseVisualStyleBackColor = true;
-            this.btnListFolder.Click += new System.EventHandler(this.btnListFolder_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -299,14 +252,13 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Check check v0.7.5";
+            this.Text = "Check check v0.8.5";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPageMain.ResumeLayout(false);
             this.tabPageMain.PerformLayout();
             this.tabPageScript.ResumeLayout(false);
-            this.tabPageSelect.ResumeLayout(false);
-            this.tabPageSelect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -323,18 +275,14 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageMain;
         private System.Windows.Forms.TabPage tabPageScript;
-        private System.Windows.Forms.TabPage tabPageSelect;
-        private System.Windows.Forms.Button btnListFolder;
         private System.Windows.Forms.Button btnCheckActor;
         private System.Windows.Forms.Label lblChosenEpisodeFrontpage;
         private System.Windows.Forms.Button btnCheckAllEps;
         private System.Windows.Forms.Label lblTotalNumLines;
         private System.Windows.Forms.Label lblScanMessage;
         private System.Windows.Forms.CheckBox chckIntro;
-        private System.Windows.Forms.Button btnRescanFolder;
-        private System.Windows.Forms.Label lblFileChosen;
-        private System.Windows.Forms.ComboBox comboListFiles;
         private System.Windows.Forms.ListBox lboxShowFiles;
+        private System.Windows.Forms.Button btnRescanFolder;
     }
 }
 

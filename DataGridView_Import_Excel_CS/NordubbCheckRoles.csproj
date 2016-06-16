@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backup.cs" />
+    <Compile Include="Models\OpeningFileMethods.cs" />
     <Compile Include="Models\Productions.cs" />
     <Compile Include="Models\ExcelScanning.cs" />
     <Compile Include="Form1.cs">

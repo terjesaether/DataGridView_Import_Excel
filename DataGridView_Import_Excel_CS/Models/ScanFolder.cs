@@ -1,16 +1,11 @@
-﻿using DataGridView_Import_Excel;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using static DataGridView_Import_Excel.Form1;
 
 namespace DataGridView_Import_Excel
 {
-class ScanFolder
+    class ScanFolder
     {
         public static void StartFileScanning(string conStr)
         {
@@ -20,11 +15,20 @@ class ScanFolder
             {
                 using (OleDbCommand cmd = new OleDbCommand())
                 {
-                    cmd.Connection = con;
-                    con.Open();
-                    DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                    sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                    con.Close();
+                    try
+                    {
+                        cmd.Connection = con;
+                        con.Open();
+                        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                        con.Close();
+                    }
+                    catch (OleDbException e)
+                    {
+                        MessageBox.Show("Får ikke åpnet en av Excel-filene. Virker som den er åpen et annet sted...", e.Message);
+                        return;
+                    }
+                    
                 }
             }
             ReadDataFromFirstSheet(conStr, sheetName);                   
