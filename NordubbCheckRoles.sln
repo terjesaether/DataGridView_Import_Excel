@@ -5,16 +5,30 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NordubbCheckRoles", "DataGridView_Import_Excel_CS\NordubbCheckRoles.csproj", "{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NordubbCheckRolesLibrary", "NordubbCheckRolesLibrary\NordubbCheckRolesLibrary.csproj", "{95EAC756-5921-4A1B-AF6D-234B50F4C25C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Debug|x86.ActiveCfg = Debug|x86
 		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Debug|x86.Build.0 = Debug|x86
+		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Release|Any CPU.ActiveCfg = Release|x86
 		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Release|x86.ActiveCfg = Release|x86
 		{4B2223EA-A2FF-45E4-BD0D-A81351EC8384}.Release|x86.Build.0 = Release|x86
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Debug|x86.Build.0 = Debug|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Release|x86.ActiveCfg = Release|Any CPU
+		{95EAC756-5921-4A1B-AF6D-234B50F4C25C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

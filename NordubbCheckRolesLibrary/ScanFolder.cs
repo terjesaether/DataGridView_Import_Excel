@@ -1,9 +1,12 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using static DataGridView_Import_Excel.Form1;
 
-namespace DataGridView_Import_Excel
+namespace NordubbCheckRolesLibrary
 {
     class ScanFolder
     {
@@ -28,10 +31,10 @@ namespace DataGridView_Import_Excel
                         MessageBox.Show("Får ikke åpnet en av Excel-filene. Virker som den er åpen et annet sted...", e.Message);
                         return;
                     }
-                    
+
                 }
             }
-            ReadDataFromFirstSheet(conStr, sheetName);                   
+            ReadDataFromFirstSheet(conStr, sheetName);
         }
 
         public static void ReadDataFromFirstSheet(string conStr, string sheetName)
@@ -54,13 +57,12 @@ namespace DataGridView_Import_Excel
                         //Populate DataGridView.
                         //dataGrid.DataSource = dt;
 
-                        Variables.theTable = dt;
-                        
+                        //Variables.theTable = dt;
+
                     }
                 }
             }
-            
+
         }
-    
     }
 }

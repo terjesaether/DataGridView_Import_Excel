@@ -83,4 +83,12 @@ namespace NordubbCheckRoles
     //    }
     //    calculateSearchResultsByEpisode(dt, searchString);
     //}
+
+    // Skal evt fjernes, lister opp etter rollenavn
+    internal class RoleNameAndListOfEpisodes
+    {
+        // Liste over episoder hvor den rollen hører til
+        public List<string> episodes { get; set; }
+        public string roleName { get; set; }
+    }
 }

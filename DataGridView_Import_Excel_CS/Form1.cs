@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.CustomProperties;
 using Microsoft.VisualBasic;
 using System.Net.Sockets;
 using System.Net;
+using NordubbCheckRolesLibrary;
 
 namespace DataGridView_Import_Excel
 {
@@ -130,7 +131,7 @@ namespace DataGridView_Import_Excel
         {   
             string conStr;                     
             conStr = string.Empty;
-            string sheetName;
+            string sheetName = "";
             string searchString = txtActorName.Text.ToString().ToLower();
 
             List<string> dtc = new List<string>();
@@ -154,15 +155,25 @@ namespace DataGridView_Import_Excel
                             cmd.Connection = con;
                             con.Open();
                             DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                            sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                            // Ruller gjennom alle arkene for å finne Forsiden eller #00
+                            for (var sheets = 0; sheets < dtExcelSchema.Rows.Count; sheets++)
+                            {
+                                //sheetName = dtExcelSchema.Rows[sheets]["TABLE_NAME"].ToString();
+                                if (dtExcelSchema.Rows[sheets]["TABLE_NAME"].ToString().Contains("Forside") || dtExcelSchema.Rows[sheets]["TABLE_NAME"].ToString().Contains("#00"))
+                                {
+                                    sheetName = dtExcelSchema.Rows[sheets]["TABLE_NAME"].ToString();
+                                    break;
+                                }
+                            }
+                                                    
                             con.Close();
                         }
                         catch (OleDbException e)
                         {
                             MessageBox.Show("Får ikke åpnet en av Excel-filene. Virker som den er åpen et annet sted...", e.Message);
                             break;
-                        }
-                        
+                        }                     
                     }
                 }
 
@@ -173,14 +184,15 @@ namespace DataGridView_Import_Excel
                     {
                         using (OleDbDataAdapter oda = new OleDbDataAdapter())
                         {
-                            DataTable dt = new DataTable();                            
+                            
+                            DataTable dt = new DataTable();
                             //sheetName = "Forside";
                             cmd.CommandText = "SELECT * From [" + sheetName + "]";
                             cmd.Connection = con;
                             con.Open();
                             oda.SelectCommand = cmd;
                             oda.Fill(dt);
-                            
+
                             var excelFrontPage = new excelFrontPage();
                             excelFrontPage.frontPageDataTable = dt;
                             excelFrontPage.seriesName = dt.Rows[0][0].ToString();
@@ -323,8 +335,8 @@ namespace DataGridView_Import_Excel
 
                 // Må gi Utskriften en mulighet til å skrive ut navn på eps
 
-            }
-            ;
+            };
+            
             decimal t = decimal.Round((Convert.ToDecimal(totNumLines) / 90), 2);
             lblTotalNumLines.Text = "TOTALT antall replikker: " + totNumLines.ToString() + ".  Det vil ta " + t + " timer å dubbe ferdig.";       
         }
@@ -378,7 +390,7 @@ namespace DataGridView_Import_Excel
                 //}
 
                 episode.deliveryDate = dt.Rows[4+rowCompensation][epColumn].ToString();
-                episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
+                //episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
                 episodeList.Add(episode);
                 string currentRoleName;
                 string currentRoleLineNumbersString;
@@ -411,7 +423,8 @@ namespace DataGridView_Import_Excel
                                     var r = new RoleNameAndNumOfLines
                                     {
                                         roleName = currentRoleName,
-                                        numOfLines = currentRoleLineNumbersString                                        
+                                        numOfLines = currentRoleLineNumbersString,
+                                        totalNumOfLines = linesTotal                                       
                                     };
 
                                     // Legger til rollenavnet i episoden:
@@ -454,7 +467,7 @@ namespace DataGridView_Import_Excel
         {
             foreach (var episode in allProductions.productions)
             {
-                if (selectedFile.Contains(episode.trimFilename(episode.excelFileName)))
+                if (selectedFile.Contains(episode.trimFilename(episode.excelFileName, Utils.dubToolDir)))
                 {
                     dataGridView1.DataSource = episode.frontPageDataTable;
                     chosenExcelFileDataTable = episode.frontPageDataTable;                    

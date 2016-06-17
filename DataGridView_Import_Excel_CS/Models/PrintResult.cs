@@ -2,40 +2,42 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
+using NordubbCheckRolesLibrary;
 
 namespace DataGridView_Import_Excel
 {
     class PrintResult
     {
-        public static void printResultByRoles(List<RoleNameAndListOfEpisodes> rolesList, FlowLayoutPanel resultPanel)
-        {
-            // skrive ut rolesList, som består av rollenavn med tilhørende episoder:
-            foreach (var item in rolesList)
-            {
+        //public static void printResultByRoles(List<RoleNameAndListOfEpisodes> rolesList, FlowLayoutPanel resultPanel)
+        //{
+        //    // skrive ut rolesList, som består av rollenavn med tilhørende episoder:
+        //    foreach (var item in rolesList)
+        //    {
                 
-                if (item.episodes.Count > 0)
-                {
-                    Label lbl = new Label();
-                    lbl.Text = item.roleName.ToString() + " er med i disse eps : ";
-                    //lbl.ForeColor = Color.Red;
-                    lbl.AutoSize = true;
+        //        if (item.episodes.Count > 0)
+        //        {
+        //            Label lbl = new Label();
+        //            lbl.Text = item.roleName.ToString() + " er med i disse eps : ";
+        //            //lbl.ForeColor = Color.Red;
+        //            lbl.AutoSize = true;
 
-                    for (int eps = 0; eps < item.episodes.Count; eps++)
-                    {
-                        lbl.Text += item.episodes[eps].ToString() + ", ";
-                    }
+        //            for (int eps = 0; eps < item.episodes.Count; eps++)
+        //            {
+        //                lbl.Text += item.episodes[eps].ToString() + ", ";
+        //            }
 
-                    //lbl.Text += " ";
+        //            //lbl.Text += " ";
 
-                    resultPanel.Controls.Add(lbl);
-                    //panel1.Controls.Add(lbl);                  
-                }
-            }
-        }
+        //            resultPanel.Controls.Add(lbl);
+        //            //panel1.Controls.Add(lbl);                  
+        //        }
+        //    }
+        //}
 
          public static int printResultByEpisode(List<Episode> episodeList, FlowLayoutPanel resultPanel, CheckBox checkBoxNoIntro)
         {
             int totNumLines = 0;
+            int counter = 0;
             
             foreach (var item in episodeList)
             {
@@ -57,9 +59,9 @@ namespace DataGridView_Import_Excel
                             DateTime deliveryDate = Convert.ToDateTime(item.deliveryDate.ToString());
                             span = deliveryDate.Subtract(DateTime.Now);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            MessageBox.Show("Åh heisann! Virker som det er et excelark som ikke er i orden. Kan det være " + item.seriesName.ToString() + ", ep " + item.episodeNumber.ToString() + " ?");
+                            MessageBox.Show("Åh heisann! Virker som det er et Excelark som ikke er i orden. Kan det være " + item.seriesName.ToString() + ", ep " + item.episodeNumber.ToString() + " ?");
                             break;
                         }
                         
@@ -128,6 +130,7 @@ namespace DataGridView_Import_Excel
                     }
                     
                 }
+                counter++;
             }
             return totNumLines;
         }
