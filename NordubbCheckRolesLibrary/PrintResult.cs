@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Drawing;
+
 using NordubbCheckRolesLibrary;
+using System.Drawing;
 
 namespace DataGridView_Import_Excel
 {
-    class PrintResult
+    public class PrintResult
     {
         //public static void printResultByRoles(List<RoleNameAndListOfEpisodes> rolesList, FlowLayoutPanel resultPanel)
         //{
@@ -88,8 +89,8 @@ namespace DataGridView_Import_Excel
                     {
                         daysText = " dag.";
                     }
-
-                    lblHeading.Text = item.seriesName.ToString().ToUpper() + " - " + "Episode " + item.episodeNumber.ToString() + deliveryText;
+                    
+                    lblHeading.Text = string.Format("{0} - Episode{1} {2}", item.seriesName.ToUpper(), item.episodeNumber, deliveryText);
 
                     lblEpNumber.Text = "Ep: " + item.episodeNumber.ToString();
                                                           

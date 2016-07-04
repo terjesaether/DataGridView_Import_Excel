@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Net;
 using NordubbCheckRolesLibrary;
 
+
 namespace DataGridView_Import_Excel
 {
     public partial class Form1 : Form
@@ -300,7 +301,7 @@ namespace DataGridView_Import_Excel
                         btnCheckActor.Enabled = true;
 
                         //calculateRoles(dt, searchString);
-                        calculateSearchResultsByEpisode(dt, searchString);
+                       Calculations.calculateSearchResultsByEpisode(dt, searchString);
                     }
                 }
             }
@@ -309,7 +310,7 @@ namespace DataGridView_Import_Excel
         // Regner ut valgt serie
         public void calculateByOneEpisode(DataTable dt, string searchString)
         {
-            List<Episode> episodeList = calculateSearchResultsByEpisode(dt, searchString);
+            List<Episode> episodeList = Calculations.calculateSearchResultsByEpisode(dt, searchString);
 
             int totNumLines = PrintResult.printResultByEpisode(episodeList, flowLayoutPanel1, chckIntro);
             decimal t = decimal.Round((Convert.ToDecimal(totNumLines) / 90), 2);
@@ -325,7 +326,7 @@ namespace DataGridView_Import_Excel
             {
                 //string seriesName = "";
 
-                List<Episode> episodeList = calculateSearchResultsByEpisode(item.frontPageDataTable, searchString);
+                List<Episode> episodeList = Calculations.calculateSearchResultsByEpisode(item.frontPageDataTable, searchString);
 
                 if (episodeList.Count > 0)
                 {
@@ -341,104 +342,7 @@ namespace DataGridView_Import_Excel
             lblTotalNumLines.Text = "TOTALT antall replikker: " + totNumLines.ToString() + ".  Det vil ta " + t + " timer å dubbe ferdig.";       
         }
 
-        // En Episode-class består av Episodenummer og Role med antall linjer
-        public List<Episode> calculateSearchResultsByEpisode(DataTable dt, string searchString)
-        {
-            string currEpsLines = "";
-            string linesTotal;
-            string linesDone;
-            string[] linesArray;
-
-            // Dette er en liste med Episoder, Episoder med en liste over rollene i den episoden
-            var episodeList = new List<Episode>();
-
-            lblChosenDubber.Text = searchString.ToString().ToUpper();
-            
-
-            // Går gjennom alle kolonnene: [rad][kolonne]
-            for (int epColumn = 4; epColumn <= 16; epColumn++)
-            {
-                int rowCompensation = 0;
-
-                Episode episode = new Episode(); // Oppretter et ny episodeobjekt
-                
-                episode.seriesName = dt.Rows[0][0].ToString();
-
-                // Sjekker om manuset er i orden: sjekker hvor tittelen står:
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    if (string.IsNullOrEmpty(episode.seriesName))
-                    {
-                        rowCompensation++;
-                        episode.seriesName = dt.Rows[rowCompensation][0].ToString();
-                        //break;                    
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                episode.episodeNumber = dt.Rows[2+rowCompensation][epColumn].ToString(); // Legger til epnr
-
-                //if (dt.Rows[0][0] == null)
-                //{
-                //    episode.seriesName = "";
-                //}
-                //else
-                //{
-                //    episode.seriesName = dt.Rows[0][0].ToString();                   
-                //}
-
-                episode.deliveryDate = dt.Rows[4+rowCompensation][epColumn].ToString();
-                //episode.roleNames = new List<RoleNameAndNumOfLines>(); // Liste med rollenavn
-                episodeList.Add(episode);
-                string currentRoleName;
-                string currentRoleLineNumbersString;
-                
-                // Nedover
-                for (int row = (5 + rowCompensation); row < dt.Rows.Count; row++)
-                {
-                    // Hvis kolonnen ikke er tom..
-                    if (dt.Rows[row][epColumn] != null) 
-                    {
-                        // Hvis skuespillercellen inneholder søkestrengen..
-                        if (dt.Rows[row][3].ToString().ToLower().Contains(searchString))
-                        {
-                            // Deler opp replikk-cellen
-                            currEpsLines = dt.Rows[row][epColumn].ToString().ToLower();
-                            linesArray = currEpsLines.Split(new char[] { '/' }, StringSplitOptions.None);
-
-                            if (linesArray.Length == 2)
-                            {
-                                linesDone = linesArray[0];
-                                linesTotal = linesArray[1];
-                                
-                                // Sjekker om det er mer enn 0 replikker igjen:
-                                if (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone) > 0)
-                                {
-                                    // Finner episodenummer i kolonne:
-                                    currentRoleName = dt.Rows[row][1].ToString().ToUpper();
-                                    currentRoleLineNumbersString = (Convert.ToInt32(linesTotal) - Convert.ToInt32(linesDone)).ToString();
-
-                                    var r = new RoleNameAndNumOfLines
-                                    {
-                                        roleName = currentRoleName,
-                                        numOfLines = currentRoleLineNumbersString,
-                                        totalNumOfLines = linesTotal                                       
-                                    };
-
-                                    // Legger til rollenavnet i episoden:
-                                    episode.roleNames.Add(r);
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-           
-            return episodeList;
-        }
+        
 
 
         // Setter enterbutton for søkefelt
@@ -486,7 +390,7 @@ namespace DataGridView_Import_Excel
             btnCheckActor.Enabled = true;
             string searchString = txtActorName.Text.ToString().ToLower();
             //calculateRoles(dt, searchString);
-            calculateSearchResultsByEpisode(dt, searchString);
+            Calculations.calculateSearchResultsByEpisode(dt, searchString);
 
         }
 

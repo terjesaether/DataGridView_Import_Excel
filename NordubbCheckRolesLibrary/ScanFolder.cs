@@ -55,10 +55,7 @@ namespace NordubbCheckRolesLibrary
                         con.Close();
 
                         //Populate DataGridView.
-                        //dataGrid.DataSource = dt;
-
-                        //Variables.theTable = dt;
-
+                        
                     }
                 }
             }

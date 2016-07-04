@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace DataGridView_Import_Excel
 {
 
-    class Utils
+    public class Utils
     {
 
         public const string dubToolDir = @"C:\dubtool\";
